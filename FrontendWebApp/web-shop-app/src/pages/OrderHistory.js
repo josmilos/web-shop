@@ -1,5 +1,15 @@
+import { Fragment } from "react";
+import PageContent from "../components/PageContent";
+
+const content = {
+    title:'Order History',
+    description: 'Check your past orders.'
+  }
+
 const OrderHistoryPage = () => {
-    return <h1>Order history seen by seller and buyer</h1>
+    return (<Fragment>
+        <PageContent content={content}/>
+    </Fragment>)
 }
 
 export default OrderHistoryPage;

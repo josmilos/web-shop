@@ -1,5 +1,38 @@
+import { Fragment } from "react";
+import PageContent from "../components/PageContent";
+import ProductsList from "../components/ProductsList";
+
+const content = {
+    title:'New Order',
+    description: 'Create a new order by selecting one or more items that are listed below.'
+  }
+
+const products = [
+    {
+        name: 'Product1',
+        description: 'Description of product one',
+        price: '$22.99',
+        quantity: 5
+    },
+    {
+        name: 'Product2',
+        description: 'Description of product two',
+        price: '$12.99',
+        quantity: 2
+    },
+    {
+        name: 'Product3',
+        description: 'Description of product three',
+        price: '$99.99',
+        quantity: 3
+    }
+]
+
 const NewOrderPage = () => {
-    return <h1>New order seen by buyer</h1>
+    return (<Fragment>
+        <PageContent content={content}/>
+        <ProductsList products={products}/>
+    </Fragment>)
 }
 
 export default NewOrderPage;

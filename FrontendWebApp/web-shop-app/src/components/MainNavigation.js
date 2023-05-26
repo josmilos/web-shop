@@ -1,5 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
-import React from "react";
+import React, { Fragment } from "react";
 
 import {
   Typography,
@@ -15,6 +15,7 @@ import {
   Container,
   Box,
   ButtonBase,
+  Stack
 } from "@mui/material";
 
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -28,6 +29,7 @@ const DivContainer = styled("div")(({ theme }) => ({
 
 function MainNavigation() {
   return (
+    <Fragment>
     <header>
       <CssBaseline />
       <AppBar position="relative">
@@ -51,6 +53,7 @@ function MainNavigation() {
         </Toolbar>
       </AppBar>
     </header>
+    </Fragment>
   );
 }
 

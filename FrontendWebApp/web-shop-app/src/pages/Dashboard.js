@@ -13,6 +13,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import PageContent from "../components/PageContent";
 
 <link rel="stylesheet" href="fonts.googleapis.com/icon?family=Material+Icons" />
 
@@ -26,10 +27,16 @@ const cards = [
   { id: "all-orders", image: "", title: "All Orders", description: "Check All Created Orders", icon: 'AccountCircleIcon' },
 ];
 
+const content = {
+  title:'Dashboard',
+  description: 'Welcome to the dashboard. Choose one of the options listed below.'
+}
+
 // FALI NEGDE key={page.id}
 const DashboardPage = () => {
   return (
     <>
+    <PageContent content={content}/>
     {cards.map((page) => {
         return (<ButtonBase component={RouterLink} to={page.id}> 
         <ContainerCardGrid maxWidth="md">
