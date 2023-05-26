@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "CDMq7f0lYND30zeze4TQpRImGn3c63J+xpjqQPh7ZzH6xPY20wcMHYcZtMHMEEu42YFJt0szTr40REm/4m4NWg==",
+  "dgSpecHash": "7DTTFCvHgHYKMuBivbvfWRn0TDcQjbZTJ1hZ/jL8TyMbi6GFuesmIwO06BuF82s6fyui/opInA6RPMrIMhWbGQ==",
   "success": true,
   "projectFilePath": "D:\\E3 PSI\\8. Semestar\\VEB 2 PROJEKAT\\Project\\BackendWebApp\\WebShopAPI\\WebShopAPI\\WebShopAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Milos\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\Milos\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Milos\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.16\\microsoft.aspnetcore.authentication.jwtbearer.6.0.16.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Milos\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",

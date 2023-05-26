@@ -10,7 +10,6 @@ namespace WebShopAPI.Infrastructure.Configurations
         {
             builder.HasKey(x => x.ProductId); // Primary key of table
             builder.Property(x => x.ProductId).ValueGeneratedOnAdd();
-            throw new NotImplementedException();
         }
     }
 }
