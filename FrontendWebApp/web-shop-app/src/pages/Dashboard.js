@@ -38,8 +38,8 @@ const DashboardPage = () => {
     <>
     <PageContent content={content}/>
     {cards.map((page) => {
-        return (<ButtonBase component={RouterLink} to={page.id}> 
-        <ContainerCardGrid maxWidth="md">
+        return (<ButtonBase component={RouterLink} to={page.id} key={page.id}> 
+        <ContainerCardGrid maxWidth="md" >
           <Grid container spacing={4}>
             <Grid item >
               <StyledCard>

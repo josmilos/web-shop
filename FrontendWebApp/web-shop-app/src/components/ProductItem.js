@@ -8,7 +8,7 @@ import {
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-const ProductItem = (product) => {
+const ProductItem = ({product}) => {
   return (
     <Fragment>
       <ButtonBase component={RouterLink} to={"/"}>
@@ -27,7 +27,7 @@ const ProductItem = (product) => {
                   <Typography>{product.description}</Typography>
                   <Typography>Price: {product.price}</Typography>
                   <Typography>Available: {product.quantity}</Typography>
-                  <Button>Buy</Button>
+                  <Button component={RouterLink} to={"/"}>Buy</Button>
                 </StyledCardContent>
               </StyledCard>
             </Grid>
