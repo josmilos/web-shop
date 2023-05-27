@@ -9,11 +9,13 @@ namespace WebShopAPI.Services
     public class ProductService : IProductService
     {
         private readonly IMapper _mapper;
+        private readonly IConfigurationSection _secretKey;
         private readonly WebShopDbContext _dbContext;
 
-        public ProductService(IMapper mapper, WebShopDbContext dbContext)
+        public ProductService(IMapper mapper, IConfiguration config, WebShopDbContext dbContext)
         {
             _mapper = mapper;
+            _secretKey = config.GetSection("SecretKey");
             _dbContext = dbContext;
         }
 
@@ -25,11 +27,20 @@ namespace WebShopAPI.Services
             return _mapper.Map<ProductDto>(product);
         }
 
-        public void DeleteProduct(int id)
+        public bool DeleteProduct(int id)
         {
-            Product product = _dbContext.Products.Find(id);
-            _dbContext.Products.Remove(product);
-            _dbContext.SaveChanges();
+            try
+            {
+                Product product = _dbContext.Products.Find(id);
+                _dbContext.Products.Remove(product);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
         }
 
         public ProductDto GetById(int id)

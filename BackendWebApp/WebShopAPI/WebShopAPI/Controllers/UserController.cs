@@ -46,5 +46,15 @@ namespace WebShopAPI.Controllers
             return Ok(_userService.UpdateUser(id, user));
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            if (_userService.DeleteUser(id))
+            {
+                return Ok(_userService.DeleteUser(id));
+            }
+            return Ok(_userService.DeleteUser(id)); // TREBA NEKI STATUS CODE
+        }
+
     }
 }

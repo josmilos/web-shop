@@ -8,10 +8,11 @@
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string UserType { get; set; }
         public string Image { get; set; }
         public bool Verified { get; set; } = false;
-        public List<Order> Orders { get; set; }
+        public List<Order> CreatedOrders { get; set; }
+        public List<Product> UserProducts { get; set; }
     }
 }

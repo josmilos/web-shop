@@ -17,30 +17,6 @@ namespace WebShopAPI.Services
         private readonly IConfigurationSection _secretKey;
         private readonly WebShopDbContext _dbContext;
 
-        private List<UserCredentialsDto> users = new List<UserCredentialsDto>()
-        {
-            new UserCredentialsDto
-            {
-                UserId = 1,
-                Email = "pedja",
-                Password = "$2a$11$L.fb./NAUzUTNLGFJiv8quleGSjDb.30RCG2BKYjxp6GNtGIT5/ji", //1234
-                UserType = "admin"
-            },
-              new UserCredentialsDto
-            {
-                UserId = 2,
-                Email = "tanja",
-                Password = "$2a$11$L.fb./NAUzUTNLGFJiv8quleGSjDb.30RCG2BKYjxp6GNtGIT5/ji", //1234
-                UserType = "seller"
-            },
-                new UserCredentialsDto
-            {
-                UserId = 3,
-                Email = "pera",
-                Password = "$2a$11$L.fb./NAUzUTNLGFJiv8quleGSjDb.30RCG2BKYjxp6GNtGIT5/ji", //1234
-                UserType = "buyer"
-            }
-        };
 
         public UserService(IMapper mapper, IConfiguration config, WebShopDbContext dbContext)
         {
@@ -51,14 +27,15 @@ namespace WebShopAPI.Services
 
         public string Login(UserCredentialsDto credentialsDto)
         {
-            UserCredentialsDto user = users.First(x => x.Email == credentialsDto.Email);
+
+            UserCredentialsDto user = _mapper.Map<List<UserCredentialsDto>>(_dbContext.Users.ToList()).First(x => x.Email == credentialsDto.Email);
 
             if(user == null)
             {
                 return null;
             }
-
-            if(BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password))
+            //BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password)
+            if (user.Password == credentialsDto.Password)
             {
                 List<Claim> claims = new List<Claim>();
                 if (credentialsDto.UserType == "admin")
@@ -94,11 +71,19 @@ namespace WebShopAPI.Services
             return _mapper.Map<UserDto>(newUser);  
         }
 
-        public void DeleteUser(int id)
+        public bool DeleteUser(int id)
         {
-            User user = _dbContext.Users.Find(id);
-            _dbContext.Users.Remove(user);
-            _dbContext.SaveChanges();
+            try
+            {
+                User user = _dbContext.Users.Find(id);
+                _dbContext.Users.Remove(user);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
         }
 
         public UserDto GetById(int id)

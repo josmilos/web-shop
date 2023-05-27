@@ -9,6 +9,6 @@ namespace WebShopAPI.Interfaces
         OrderDto GetById(int id);
         OrderDto AddOrder(OrderDto newOrder);
         OrderDto UpdateOrder(int id, OrderDto newOrderData);
-        void DeleteOrder(int id);
+        bool DeleteOrder(int id);
     }
 }

@@ -8,7 +8,7 @@ namespace WebShopAPI.Interfaces
         UserDto GetById(int id);
         UserDto AddUser(UserDto newUser);
         UserDto UpdateUser(int id, UserDto newUserData);
-        void DeleteUser(int id);
+        bool DeleteUser(int id);
 
         string Login(UserCredentialsDto credentialsDto);
     }
