@@ -15,9 +15,15 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import GoogleButton from '../components/GoogleButton';
+import GoogleButton from "../components/GoogleButton";
+import { Autocomplete } from "@mui/material";
+import { alignProperty } from "@mui/material/styles/cssUtils";
+import { Form } from "react-router-dom";
+import { json, redirect } from "react-router-dom";
 
 const defaultTheme = createTheme();
+const minDate = dayjs(new Date(1910, 1, 1));
+const userType = ["Buyer", "Seller"];
 
 const SignUp = () => {
   const handleSubmit = (event) => {
@@ -28,8 +34,6 @@ const SignUp = () => {
       password: data.get("password"),
     });
   };
-
-  const minDate = dayjs(new Date(1910, 1, 1));
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -50,12 +54,21 @@ const SignUp = () => {
             Sign up
           </Typography>
           <Box
-            component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
+            <Form method="post">
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <TextField
+                  name="username"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  autoFocus
+                />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
@@ -87,7 +100,13 @@ const SignUp = () => {
               </Grid>
               <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker disableFuture minDate={minDate} label='Date of Birth'/>
+                  <DatePicker
+                    disableFuture
+                    id="date"
+                    name="date"
+                    minDate={minDate}
+                    label="Date of Birth"
+                  />
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12}>
@@ -120,31 +139,39 @@ const SignUp = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={userType}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="User Type" name="type"/>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Button
                   component="label"
                   variant="outlined"
                   startIcon={<UploadFileIcon />}
-                  sx={{ marginRight: "2rem"}}
+                  sx={{ marginRight: "2rem" }}
                 >
                   Upload Picture
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                  />
+                  <input type="file" accept="image/*" id="img" name="img" hidden />
                 </Button>
               </Grid>
             </Grid>
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
+              
             </Button>
-            <Typography align='center'>Or</Typography>
-            <GoogleButton/>
+            </Form>
+            <Typography align="center">Or</Typography>
+            <GoogleButton />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="log-in" variant="body2">
@@ -160,3 +187,38 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+
+
+export async function actionRegister({ request }) {
+    console.log("Problem")
+  const data = await request.formData();
+  const authData = {
+    userName: data.get('username'),
+    email: data.get('email'),
+    password: data.get('password'),
+    firstName: data.get('firstName'),
+    lastName: data.get('lastName'),
+    address: data.get('address'),
+    dateOfBirth: data.get('date'),
+    userType: data.get('type'),
+    image: data.get('img'),
+    verification: "",
+    orders: [],
+  };
+
+  const response = await fetch('http://localhost:5120/api/users/register', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(authData)
+  });
+
+  if(!response.ok){
+    throw json({message: 'Could not authenticate user.'}, {status: 500});
+  }
+
+  return redirect('/');
+}

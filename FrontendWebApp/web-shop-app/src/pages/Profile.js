@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import PageContent from "../components/PageContent";
+import ProfileOverview from "../components/ProfileOverview";
 
 const content = {
     title:'Your Profile',
@@ -9,6 +10,7 @@ const content = {
 const ProfilePage = () => {
     return (<Fragment>
         <PageContent content={content}/>
+        <ProfileOverview/>
     </Fragment>)
 }
 

@@ -11,5 +11,6 @@ namespace WebShopAPI.Interfaces
         bool DeleteUser(int id);
 
         string Login(UserCredentialsDto credentialsDto);
+        string Register(UserDto userDto);
     }
 }

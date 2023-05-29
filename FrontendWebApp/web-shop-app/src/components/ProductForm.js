@@ -1,0 +1,127 @@
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Avatar from "@mui/material/Avatar";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+
+const defaultTheme = createTheme();
+
+const ProductForm = () => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [image, setImage] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Perform any necessary form validation and handle form submission
+    // Here, you can make API requests or perform other actions with the form data
+    console.log({
+      name,
+      description,
+      price,
+      quantity,
+      image,
+    });
+
+    // Reset form fields
+    setName("");
+    setDescription("");
+    setPrice(0);
+    setQuantity(0);
+    setImage("");
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Box
+        sx={{
+          marginTop: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <Box
+          noValidate
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            mt: 3,
+            width: "100%",
+            display: "grid",
+            gap: "1rem",
+          }}
+        >
+          <TextField
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+            sx={{ width: "35%" }}
+          />
+          <TextField
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+            sx={{ width: "35%" }}
+          />
+          <TextField
+            label="Price"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+            sx={{ width: "35%" }}
+          />
+          <TextField
+            label="Quantity"
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+            sx={{ width: "35%" }}
+          />
+          <Button
+            component="label"
+            variant="outlined"
+            fullWidth
+            startIcon={<UploadFileIcon />}
+            sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
+          >
+            Upload Picture
+            <input type="file" accept="image/*" id="img" name="img" hidden />
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3, mb: 2, width: "35%" }}
+          >
+            Add Product
+          </Button>
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
+};
+
+export default ProductForm;

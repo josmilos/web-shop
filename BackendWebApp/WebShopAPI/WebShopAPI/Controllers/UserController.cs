@@ -22,6 +22,12 @@ namespace WebShopAPI.Controllers
             return Ok(_userService.Login(credDto));
         }
 
+        [HttpPost("register")]
+        public IActionResult Post([FromBody] UserDto userDto)
+        {
+            return Ok(_userService.Register(userDto));
+        }
+
         [HttpGet("all")]
         public IActionResult GetAll()
         {

@@ -1,5 +1,15 @@
+import { Fragment } from "react";
+import PageContent from "../components/PageContent";
+
+const content = {
+    title:'All Created Orders',
+    description: 'Here you can see all orders created on the website. This window can be seen only by admin.'
+  }
+
 const AllOrdersPage = () => {
-    return <h1>Orders seen by Admin</h1>
+    return (<Fragment>
+        <PageContent content={content}/>
+    </Fragment>)
 }
 
 export default AllOrdersPage;

@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import PageContent from "../components/PageContent";
+import ProductForm from "../components/ProductForm";
 
 const content = {
     title:'Add New Product',
@@ -9,6 +10,7 @@ const content = {
 const NewProductPage = () => {
     return (<Fragment>
         <PageContent content={content}/>
+        <ProductForm/>
     </Fragment>)
 }
 

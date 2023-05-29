@@ -29,6 +29,7 @@ const LogInPage = () => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
+        component="form"
           sx={{
             marginTop: 8,
             display: 'flex',

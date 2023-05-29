@@ -2,7 +2,7 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
-import SignUpPage from "./pages/SignUp";
+import SignUpPage, {actionRegister} from "./pages/SignUp";
 import LogInPage from "./pages/Login";
 import DashboardPage from "./pages/Dashboard";
 import ProfilePage from "./pages/Profile";
@@ -13,21 +13,8 @@ import VerificationPage from "./pages/Verification";
 import PendingOrdersPage from "./pages/PendingOrders";
 import AllOrdersPage from "./pages/AllOrders";
 
-/*
+//import {actionRegister} from './service/UserService';
 
-// import makeStyles from "@mui/material/styles";
-
-
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8,0,6)
-    }
-}))
-
-
-*/
 
 const router = createBrowserRouter([
   {
@@ -41,6 +28,7 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUpPage />,
+        action: actionRegister
       },
       {
         path: "log-in",
@@ -93,6 +81,3 @@ const App = () => {
 
 export default App;
 
-/* 
-
-    */

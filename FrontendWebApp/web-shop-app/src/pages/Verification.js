@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import PageContent from "../components/PageContent";
 
 const content = {
-    title:'Verfiy New Sellers',
+    title:'Verify New Sellers',
     description: 'Check and approve new sellers that are waiting for verification.'
   }
 

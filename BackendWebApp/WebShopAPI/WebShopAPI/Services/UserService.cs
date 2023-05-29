@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using WebShopAPI.Dto;
 using WebShopAPI.Infrastructure;
 using WebShopAPI.Interfaces;
@@ -34,8 +35,8 @@ namespace WebShopAPI.Services
             {
                 return null;
             }
-            //BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password)
-            if (user.Password == credentialsDto.Password)
+            
+            if (BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password))
             {
                 List<Claim> claims = new List<Claim>();
                 if (credentialsDto.UserType == "admin")
@@ -60,6 +61,183 @@ namespace WebShopAPI.Services
             {
                 return null;
             }
+        }
+
+        public string Register(UserDto userDto) {
+            userDto.DateOfBirth = 
+            UserDto user = _mapper.Map<List<UserDto>>(_dbContext.Users.ToList()).First(x => x.Email == userDto.Email);
+
+            List<UserDto> registeredUsers = GetUsers();
+            Console.WriteLine("Here");
+            if (user == null)
+            {
+                return null;
+            }
+
+            #region UsernameValidation
+            if (user.UserName == string.Empty || user.UserName == null)
+            {
+                return null;
+            }
+            else if(user.UserName.Length < 3 || user.UserName.Length > 20)
+            {
+                return null;
+            }
+
+            foreach(UserDto usr in registeredUsers)
+            {
+                if(user.UserName.ToLower() == usr.UserName)
+                {
+                    return null;
+                }
+            }
+
+            #endregion UsernameValidation
+
+            #region EmailValidation
+            if(user.Email == string.Empty || user.Email == null)
+            {
+                return null;
+            }
+            else if (!user.Email.Contains('@'))
+            {
+                return null;
+            }
+            else if(user.Email.Length < 6 || user.Email.Length > 30)
+            {
+                return null;
+            }
+
+
+            #endregion EmailValidation
+
+            #region FirstnameValidation
+            if(user.FirstName == string.Empty || user.FirstName == null)
+            {
+                return null;
+            }
+            else if(!Regex.IsMatch(user.FirstName, @"^[a-zA-Z]+$"))
+            {
+                return null;
+            }
+            else if(user.FirstName.Length < 2 || user.FirstName.Length > 30)
+            {
+                return null;
+            }
+            #endregion FirstnameValidation
+
+            #region LastnameValidation
+            if (user.LastName == string.Empty || user.LastName == null)
+            {
+                return null;
+            }
+            else if (!Regex.IsMatch(user.LastName, @"^[a-zA-Z]+$"))
+            {
+                return null;
+            }
+            else if (user.LastName.Length < 2 || user.LastName.Length > 30)
+            {
+                return null;
+            }
+            #endregion LastnameValidation
+
+            #region AddressValidation
+            if (user.Address == string.Empty || user.Address == null)
+            {
+                return null;
+            }
+            else if (Regex.IsMatch(user.Address, @"^[0-9]+$"))
+            {
+                return null;
+            }
+            else if (user.Address.Length < 5 || user.Address.Length > 50)
+            {
+                return null;
+            }
+
+            #endregion AddressValidation
+
+            #region PasswordValidation
+            if (user.Password == string.Empty || user.Password == null)
+            {
+                return null;
+            }
+            else if(user.Password.Length < 6 || user.Password.Length > 30)
+            {
+                return null;
+            }
+            #endregion PasswordValidation
+
+            #region BirthDateValidation
+
+            if(DateTime.Compare(user.DateOfBirth, new DateTime(1910, 1, 1)) < 0)
+            {
+                return null;
+            }
+            else if(DateTime.Compare(user.DateOfBirth, DateTime.Now) > 0)
+            {
+                return null;
+            }
+            #endregion BirthDateValidation
+
+            #region UserTypeValidation
+            if(user.UserType == null || user.UserType == string.Empty)
+            {
+                return null;
+            }
+            if(user.UserType != "buyer" && user.UserType != "seller")
+            {
+                return null;
+            }
+
+            #endregion UserTypeValidation
+
+            #region ImageValidation
+            if(user.Image == null || user.Image == string.Empty)
+            {
+                return null;
+            }
+            #endregion ImageValidation
+
+
+            #region RegisteringUserInDataBase
+            UserDto newUser = user;
+            newUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            if(user.UserType == "seller")
+            {
+                user.Verification = "processing";
+            }
+            try
+            {
+                AddUser(newUser);
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+
+            #endregion RegisteringUserInDataBase
+
+            #region Token
+            List<Claim> claims = new List<Claim>();
+            if (user.UserType == "admin")
+                claims.Add(new Claim(ClaimTypes.Role, "admin"));
+            if (user.UserType == "seller")
+                claims.Add(new Claim(ClaimTypes.Role, "seller"));
+            if (user.UserType == "buyer")
+                claims.Add(new Claim(ClaimTypes.Role, "buyer"));
+
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokeOptions = new JwtSecurityToken(
+                issuer: "http://localhost:44398", //url servera koji je izdao token
+                claims: claims, //claimovi
+                expires: DateTime.Now.AddMinutes(20), //vazenje tokena u minutama
+                signingCredentials: signinCredentials //kredencijali za potpis
+            );
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            return tokenString;
+            #endregion Token
         }
 
         public UserDto AddUser(UserDto newUser)
@@ -106,7 +284,7 @@ namespace WebShopAPI.Services
             user.LastName = newUserData.LastName;
             user.DateOfBirth = newUserData.DateOfBirth;
             user.Image = newUserData.Image;
-            user.Verified = newUserData.Verified;
+            user.Verification = newUserData.Verification;
             _dbContext.SaveChanges();
 
             return _mapper.Map<UserDto>(user);

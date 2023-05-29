@@ -18,9 +18,10 @@ namespace WebShopAPI.Infrastructure.Configurations
             builder.Property(x => x.LastName).HasMaxLength(30);
 
             builder.Property(x => x.Email).HasMaxLength(30);
+            builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.Password).HasMaxLength(30);
             builder.Property(x => x.UserType).HasMaxLength(10);
-
+            builder.Property(x => x.Address).HasMaxLength(50);
 
         }
     }
