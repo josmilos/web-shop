@@ -2,7 +2,7 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
-import SignUpPage, {actionRegister} from "./pages/SignUp";
+import SignUpPage from "./pages/SignUp";
 import LogInPage from "./pages/Login";
 import DashboardPage from "./pages/Dashboard";
 import ProfilePage from "./pages/Profile";
@@ -28,7 +28,6 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUpPage />,
-        action: actionRegister
       },
       {
         path: "log-in",

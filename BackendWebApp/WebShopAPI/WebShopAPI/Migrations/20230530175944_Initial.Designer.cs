@@ -12,7 +12,7 @@ using WebShopAPI.Infrastructure;
 namespace WebShopAPI.Migrations
 {
     [DbContext(typeof(WebShopDbContext))]
-    [Migration("20230529202048_Initial")]
+    [Migration("20230530175944_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -146,8 +146,8 @@ namespace WebShopAPI.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("UserName")
                         .IsRequired()

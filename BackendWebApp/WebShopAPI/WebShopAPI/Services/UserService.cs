@@ -64,8 +64,10 @@ namespace WebShopAPI.Services
         }
 
         public string Register(UserDto userDto) {
-            userDto.DateOfBirth = 
-            UserDto user = _mapper.Map<List<UserDto>>(_dbContext.Users.ToList()).First(x => x.Email == userDto.Email);
+            //userDto.DateOfBirth = 
+            //UserDto user = _mapper.Map<List<UserDto>>(_dbContext.Users.ToList()).First(x => x.Email == userDto.Email);
+            Console.WriteLine("START");
+            User user = _mapper.Map<User>(userDto);
 
             List<UserDto> registeredUsers = GetUsers();
             Console.WriteLine("Here");
@@ -201,15 +203,18 @@ namespace WebShopAPI.Services
 
 
             #region RegisteringUserInDataBase
-            UserDto newUser = user;
+            Console.WriteLine("UPISAN");
+            UserDto newUser = userDto;
             newUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            if(user.UserType == "seller")
+            if(newUser.UserType == "seller")
             {
-                user.Verification = "processing";
+                newUser.Verification = "processing";
             }
             try
             {
-                AddUser(newUser);
+                User userToStore = _mapper.Map<User>(newUser);
+                _dbContext.Users.Add(userToStore);
+                _dbContext.SaveChangesAsync();
             }
             catch(Exception ex)
             {
@@ -220,11 +225,11 @@ namespace WebShopAPI.Services
 
             #region Token
             List<Claim> claims = new List<Claim>();
-            if (user.UserType == "admin")
+            if (newUser.UserType == "admin")
                 claims.Add(new Claim(ClaimTypes.Role, "admin"));
-            if (user.UserType == "seller")
+            if (newUser.UserType == "seller")
                 claims.Add(new Claim(ClaimTypes.Role, "seller"));
-            if (user.UserType == "buyer")
+            if (newUser.UserType == "buyer")
                 claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
@@ -244,7 +249,7 @@ namespace WebShopAPI.Services
         {
             User user = _mapper.Map<User>(newUser);
             _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
+            _dbContext.SaveChangesAsync();
 
             return _mapper.Map<UserDto>(newUser);  
         }

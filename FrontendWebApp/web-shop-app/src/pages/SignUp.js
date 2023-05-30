@@ -26,14 +26,57 @@ const minDate = dayjs(new Date(1910, 1, 1));
 const userType = ["Buyer", "Seller"];
 
 const SignUp = () => {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
+    const form = event.target;
+    const data = new FormData(form);
+
+    const authData = {
+      userId: 0,
+      userName: data.get("username"),
       email: data.get("email"),
       password: data.get("password"),
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      address: data.get("address"),
+      dateOfBirth: data.get("date"),
+      userType: data.get("type"),
+      image: data.get("img"),
+      verification: "",
+      orders: [],
+    };
+
+    const testAuthData = {
+      userId: 0,
+      userName: "ivica",
+      email: "ivan@email.com",
+      password: "sifra12345",
+      firstName: "Ivan",
+      lastName: "Mitric",
+      address: "Dositeja Obradovica 2",
+      dateOfBirth: "2023-04-10",
+      userType: "buyer",
+      image: "dfa",
+      verification: "",
+      orders: [],
+    }
+    console.log("Problem")
+
+    const response = await fetch("https://localhost:7108/api/users/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(testAuthData),
     });
-  };
+    console.log(response);
+
+    if (!response.ok) {
+      throw json({ message: "Could not authenticate user." }, { status: 500 });
+    }
+
+  return redirect('/');
+}
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -57,7 +100,7 @@ const SignUp = () => {
             noValidate
             sx={{ mt: 3 }}
           >
-            <Form method="post">
+            <Form method="post" onSubmit={handleSubmit}>
             <Grid container spacing={2}>
             <Grid item xs={12}>
                 <TextField
@@ -132,10 +175,10 @@ const SignUp = () => {
                 <TextField
                   required
                   fullWidth
-                  name="password"
+                  name="password-confirm"
                   label="Repeat Password"
                   type="password"
-                  id="password"
+                  id="password-confirm"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -164,6 +207,7 @@ const SignUp = () => {
             <Button
               fullWidth
               variant="contained"
+              type="submit"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
@@ -188,37 +232,3 @@ const SignUp = () => {
 
 export default SignUp;
 
-
-
-
-export async function actionRegister({ request }) {
-    console.log("Problem")
-  const data = await request.formData();
-  const authData = {
-    userName: data.get('username'),
-    email: data.get('email'),
-    password: data.get('password'),
-    firstName: data.get('firstName'),
-    lastName: data.get('lastName'),
-    address: data.get('address'),
-    dateOfBirth: data.get('date'),
-    userType: data.get('type'),
-    image: data.get('img'),
-    verification: "",
-    orders: [],
-  };
-
-  const response = await fetch('http://localhost:5120/api/users/register', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(authData)
-  });
-
-  if(!response.ok){
-    throw json({message: 'Could not authenticate user.'}, {status: 500});
-  }
-
-  return redirect('/');
-}

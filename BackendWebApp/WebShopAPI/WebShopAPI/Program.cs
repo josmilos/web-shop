@@ -43,11 +43,11 @@ builder.Services.AddSwaggerGen(c =>
                     }
                 });
 });
-/*
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("SamoOdabrani", policy => policy.RequireClaim("Neki_moj_claim")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
-});*/
+});
 
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

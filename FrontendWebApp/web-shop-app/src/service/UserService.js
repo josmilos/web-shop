@@ -17,6 +17,10 @@ export async function actionRegister({ request }) {
     orders: [],
   };
 
+  authData.forEach(element => {
+    console.log(element);
+  });
+
   const response = await fetch('http://localhost:5120/api/users/register', {
     method: 'POST',
     headers: {
