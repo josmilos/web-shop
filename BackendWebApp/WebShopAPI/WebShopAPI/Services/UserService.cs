@@ -70,26 +70,31 @@ namespace WebShopAPI.Services
             User user = _mapper.Map<User>(userDto);
 
             List<UserDto> registeredUsers = GetUsers();
-            Console.WriteLine("Here");
             if (user == null)
             {
+                Console.WriteLine("-------------NEUSPESNO MAPIRANJE--------------");
                 return null;
             }
-
+            Console.WriteLine(user.UserName);
             #region UsernameValidation
             if (user.UserName == string.Empty || user.UserName == null)
             {
+                Console.WriteLine("------------PRAZNO IME---------------");
                 return null;
             }
             else if(user.UserName.Length < 3 || user.UserName.Length > 20)
             {
+                Console.WriteLine("------------PREKRATKO/PREDUGACKO IME---------------");
                 return null;
             }
 
-            foreach(UserDto usr in registeredUsers)
+            
+            foreach (UserDto usr in registeredUsers)
             {
+                Console.WriteLine(usr.UserName);
                 if(user.UserName.ToLower() == usr.UserName)
                 {
+                    Console.WriteLine("--------------VEC POSTOJI USERNAME-------------");
                     return null;
                 }
             }
@@ -174,10 +179,12 @@ namespace WebShopAPI.Services
 
             if(DateTime.Compare(user.DateOfBirth, new DateTime(1910, 1, 1)) < 0)
             {
+                Console.WriteLine("-----------DATUM STARIJI----------------");
                 return null;
             }
             else if(DateTime.Compare(user.DateOfBirth, DateTime.Now) > 0)
             {
+                Console.WriteLine("-----------DATUM MLADJI----------------");
                 return null;
             }
             #endregion BirthDateValidation
@@ -185,10 +192,12 @@ namespace WebShopAPI.Services
             #region UserTypeValidation
             if(user.UserType == null || user.UserType == string.Empty)
             {
+                Console.WriteLine("----------PRAZAN TIP KORISNIKA-----------------");
                 return null;
             }
             if(user.UserType != "buyer" && user.UserType != "seller")
             {
+                Console.WriteLine("---------------POGRESAN TIP------------");
                 return null;
             }
 
@@ -197,6 +206,7 @@ namespace WebShopAPI.Services
             #region ImageValidation
             if(user.Image == null || user.Image == string.Empty)
             {
+                Console.WriteLine("------------PRAZNA SLIKA---------------");
                 return null;
             }
             #endregion ImageValidation

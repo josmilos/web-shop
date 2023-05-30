@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -23,9 +23,21 @@ import { json, redirect } from "react-router-dom";
 
 const defaultTheme = createTheme();
 const minDate = dayjs(new Date(1910, 1, 1));
+//const today = dayjs(new Date.date)
 const userType = ["Buyer", "Seller"];
 
 const SignUp = () => {
+  const [date, setDate] = useState("");
+  const [image, setImage] = useState("");
+
+  const imageHandler = (event) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
@@ -39,44 +51,28 @@ const SignUp = () => {
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       address: data.get("address"),
-      dateOfBirth: data.get("date"),
-      userType: data.get("type"),
-      image: data.get("img"),
+      dateOfBirth: date,
+      userType: data.get("type").toLocaleLowerCase(),
+      image: image,
       verification: "",
       orders: [],
     };
 
-    const testAuthData = {
-      userId: 0,
-      userName: "ivica",
-      email: "ivan@email.com",
-      password: "sifra12345",
-      firstName: "Ivan",
-      lastName: "Mitric",
-      address: "Dositeja Obradovica 2",
-      dateOfBirth: "2023-04-10",
-      userType: "buyer",
-      image: "dfa",
-      verification: "",
-      orders: [],
-    }
-    console.log("Problem")
 
     const response = await fetch("https://localhost:7108/api/users/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(testAuthData),
+      body: JSON.stringify(authData),
     });
-    console.log(response);
 
     if (!response.ok) {
       throw json({ message: "Could not authenticate user." }, { status: 500 });
     }
-
-  return redirect('/');
-}
+    console.log("STOP")
+    return redirect('/');
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -96,123 +92,126 @@ const SignUp = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            noValidate
-            sx={{ mt: 3 }}
-          >
+          <Box noValidate sx={{ mt: 3 }}>
             <Form method="post" onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    disableFuture
-                    id="date"
-                    name="date"
-                    minDate={minDate}
-                    label="Date of Birth"
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="username"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    autoFocus
                   />
-                </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="given-name"
+                    name="firstName"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <input
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                    ></input>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="address"
+                    label="Address"
+                    name="address"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password-confirm"
+                    label="Repeat Password"
+                    type="password"
+                    id="password-confirm"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={userType}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="User Type" name="type" />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="img"
+                    name="img"
+                    style={{ display: "none" }}
+                    onChange={(e) => imageHandler(e)}
+                  />
+                  <label htmlFor="img">
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      startIcon={<UploadFileIcon />}
+                      sx={{ marginRight: "2rem" }}
+                    >
+                      Upload Picture
+                    </Button>
+                  </label>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="address"
-                  label="Address"
-                  name="address"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password-confirm"
-                  label="Repeat Password"
-                  type="password"
-                  id="password-confirm"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={userType}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="User Type" name="type"/>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<UploadFileIcon />}
-                  sx={{ marginRight: "2rem" }}
-                >
-                  Upload Picture
-                  <input type="file" accept="image/*" id="img" name="img" hidden />
-                </Button>
-              </Grid>
-            </Grid>
-            <Button
-              fullWidth
-              variant="contained"
-              type="submit"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-              
-            </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                type="submit"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
             </Form>
             <Typography align="center">Or</Typography>
             <GoogleButton />
@@ -231,4 +230,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
