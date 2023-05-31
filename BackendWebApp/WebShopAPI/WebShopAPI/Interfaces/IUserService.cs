@@ -10,7 +10,7 @@ namespace WebShopAPI.Interfaces
         UserDto UpdateUser(int id, UserDto newUserData);
         bool DeleteUser(int id);
 
-        string Login(UserCredentialsDto credentialsDto);
-        string Register(UserDto userDto);
+        Dictionary<string, string> Login(UserCredentialsDto credentialsDto);
+        Dictionary<string, string> Register(UserDto userDto);
     }
 }

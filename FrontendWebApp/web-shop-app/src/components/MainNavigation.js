@@ -15,7 +15,7 @@ import {
   Container,
   Box,
   ButtonBase,
-  Stack
+  Stack,
 } from "@mui/material";
 
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -28,31 +28,39 @@ const DivContainer = styled("div")(({ theme }) => ({
 }));
 
 function MainNavigation() {
+  const token = useRouteLoaderData("root");
   return (
     <Fragment>
-    <header>
-      <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <ButtonBase component={RouterLink} to={"/"}>
-            <ShoppingBagOutlinedIcon />
-            <Typography variant="h6" >Web Shop</Typography>
-          </ButtonBase>
+      <header>
+        <CssBaseline />
+        <AppBar position="relative">
+          <Toolbar>
+            <ButtonBase component={RouterLink} to={"/"}>
+              <ShoppingBagOutlinedIcon />
+              <Typography variant="h6">Web Shop</Typography>
+            </ButtonBase>
 
-          <Button
-            variant="text"
-            sx={{ my: 2, color: "white", display: "block", flex: 1 }}
-            component={RouterLink}
-            to={"dashboard"}
-            
-          >
-            Dashboard
-          </Button>
-          <Button color="inherit" component={RouterLink}
-            to={"log-in"}>Login</Button>
-        </Toolbar>
-      </AppBar>
-    </header>
+            <Button
+              variant="text"
+              sx={{ my: 2, color: "white", display: "block", flex: 1 }}
+              component={RouterLink}
+              to={"dashboard"}
+            >
+              Dashboard
+            </Button>
+            {!token && (
+              <Button color="inherit" component={RouterLink} to={"log-in"}>
+                Login
+              </Button>
+            )}
+            {token && (
+              <Form action="/logout" method="post">
+                <button>Logout</button>
+              </Form>
+            )}
+          </Toolbar>
+        </AppBar>
+      </header>
     </Fragment>
   );
 }

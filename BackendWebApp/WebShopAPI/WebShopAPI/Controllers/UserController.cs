@@ -25,7 +25,14 @@ namespace WebShopAPI.Controllers
         [HttpPost("register")]
         public IActionResult Post([FromBody] UserDto userDto)
         {
-            return Ok(_userService.Register(userDto));
+            Dictionary<string, string> response = _userService.Register(userDto);
+            if (response["statusCode"] != "200") {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = response["statusCode"], token = response["token"] });
+            }
         }
 
         [HttpGet("all")]

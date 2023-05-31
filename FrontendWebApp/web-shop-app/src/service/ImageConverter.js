@@ -11,8 +11,6 @@ const ImageConverter = (props) => {
         reader.onload = () =>{
             setImage(reader.result);
         }
-
-        return image;
     }
 
 }

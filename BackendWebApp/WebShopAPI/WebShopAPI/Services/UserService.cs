@@ -26,76 +26,93 @@ namespace WebShopAPI.Services
             _secretKey = config.GetSection("SecretKey");
         }
 
-        public string Login(UserCredentialsDto credentialsDto)
+        public Dictionary<string, string> Login(UserCredentialsDto credentialsDto)
         {
-
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
             UserCredentialsDto user = _mapper.Map<List<UserCredentialsDto>>(_dbContext.Users.ToList()).First(x => x.Email == credentialsDto.Email);
 
             if(user == null)
             {
-                return null;
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
             }
             
             if (BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password))
             {
                 List<Claim> claims = new List<Claim>();
-                if (credentialsDto.UserType == "admin")
+                if (user.UserType == "admin")
                     claims.Add(new Claim(ClaimTypes.Role, "admin"));
-                if (credentialsDto.UserType == "seller")
+                if (user.UserType == "seller")
                     claims.Add(new Claim(ClaimTypes.Role, "seller"));
-                if (credentialsDto.UserType == "buyer")
+                if (user.UserType == "buyer")
                     claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
+                claims.Add(new Claim("userId", user.UserId.ToString()));
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
                     issuer: "http://localhost:44398", //url servera koji je izdao token
                     claims: claims, //claimovi
-                    expires: DateTime.Now.AddMinutes(20), //vazenje tokena u minutama
+                    expires: DateTime.Now.AddMinutes(30), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return tokenString;
+                if(response["statusCode"] == "200")
+                {
+                    response["token"] = tokenString;
+                }
+
+                return response;
             }
             else
             {
-                return null;
+                response["statusCode"] = "401";
+                response["message"] = "Credentials do not match.";
+                return response;
             }
         }
 
-        public string Register(UserDto userDto) {
-            //userDto.DateOfBirth = 
-            //UserDto user = _mapper.Map<List<UserDto>>(_dbContext.Users.ToList()).First(x => x.Email == userDto.Email);
-            Console.WriteLine("START");
+        public Dictionary<string, string> Register(UserDto userDto) {
+
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
             User user = _mapper.Map<User>(userDto);
 
             List<UserDto> registeredUsers = GetUsers();
             if (user == null)
             {
                 Console.WriteLine("-------------NEUSPESNO MAPIRANJE--------------");
-                return null;
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
             }
             Console.WriteLine(user.UserName);
             #region UsernameValidation
             if (user.UserName == string.Empty || user.UserName == null)
             {
                 Console.WriteLine("------------PRAZNO IME---------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] = "\nUsername must not be empty.";
             }
             else if(user.UserName.Length < 3 || user.UserName.Length > 20)
             {
                 Console.WriteLine("------------PREKRATKO/PREDUGACKO IME---------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] = "\nUsername length has to be between 3 and 20 characters.";
             }
 
             
             foreach (UserDto usr in registeredUsers)
             {
-                Console.WriteLine(usr.UserName);
                 if(user.UserName.ToLower() == usr.UserName)
                 {
                     Console.WriteLine("--------------VEC POSTOJI USERNAME-------------");
-                    return null;
+                    response["statusCode"] = "400";
+                    response["message"] += "\nUsername already taken.";
                 }
             }
 
@@ -104,62 +121,84 @@ namespace WebShopAPI.Services
             #region EmailValidation
             if(user.Email == string.Empty || user.Email == null)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nEmail must not be empty.";
             }
             else if (!user.Email.Contains('@'))
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nInvalid email format.";
             }
             else if(user.Email.Length < 6 || user.Email.Length > 30)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nEmail length has to be between 6 and 30 characters";
+            }
+
+            foreach (UserDto usr in registeredUsers)
+            {
+                if (user.Email == usr.Email)
+                {
+                    Console.WriteLine("--------------VEC POSTOJI EMAIL-------------");
+                    response["statusCode"] = "400";
+                    response["message"] += "\nThis email has already been registered";
+                }
             }
 
 
             #endregion EmailValidation
 
             #region FirstnameValidation
-            if(user.FirstName == string.Empty || user.FirstName == null)
+            if (user.FirstName == string.Empty || user.FirstName == null)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nFirstname must not be empty.";
             }
             else if(!Regex.IsMatch(user.FirstName, @"^[a-zA-Z]+$"))
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nFirstname can not contain numbers.";
             }
             else if(user.FirstName.Length < 2 || user.FirstName.Length > 30)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nFirstname length has to be between 2 and 30 characters";
             }
             #endregion FirstnameValidation
 
             #region LastnameValidation
             if (user.LastName == string.Empty || user.LastName == null)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nLastname must not be empty.";
             }
             else if (!Regex.IsMatch(user.LastName, @"^[a-zA-Z]+$"))
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nLastname can not contain numbers.";
             }
             else if (user.LastName.Length < 2 || user.LastName.Length > 30)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nLastname length has to be between 2 and 30 characters";
             }
             #endregion LastnameValidation
 
             #region AddressValidation
             if (user.Address == string.Empty || user.Address == null)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nAddress must not be empty.";
             }
             else if (Regex.IsMatch(user.Address, @"^[0-9]+$"))
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nAddress can not contain only numbers.";
             }
             else if (user.Address.Length < 5 || user.Address.Length > 50)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nAddress length has to be between 5 and 50 characters";
             }
 
             #endregion AddressValidation
@@ -167,11 +206,13 @@ namespace WebShopAPI.Services
             #region PasswordValidation
             if (user.Password == string.Empty || user.Password == null)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nPassword must not be empty.";
             }
             else if(user.Password.Length < 6 || user.Password.Length > 30)
             {
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nPassword length has to be between 6 and 30 characters";
             }
             #endregion PasswordValidation
 
@@ -180,12 +221,14 @@ namespace WebShopAPI.Services
             if(DateTime.Compare(user.DateOfBirth, new DateTime(1910, 1, 1)) < 0)
             {
                 Console.WriteLine("-----------DATUM STARIJI----------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nDate of birth can not be before year 1910.";
             }
             else if(DateTime.Compare(user.DateOfBirth, DateTime.Now) > 0)
             {
                 Console.WriteLine("-----------DATUM MLADJI----------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nDate of birth can not be after today.";
             }
             #endregion BirthDateValidation
 
@@ -193,12 +236,14 @@ namespace WebShopAPI.Services
             if(user.UserType == null || user.UserType == string.Empty)
             {
                 Console.WriteLine("----------PRAZAN TIP KORISNIKA-----------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nUser type must not be empty.";
             }
             if(user.UserType != "buyer" && user.UserType != "seller")
             {
                 Console.WriteLine("---------------POGRESAN TIP------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nUnsupported user type. Supported types are buyer and seller.";
             }
 
             #endregion UserTypeValidation
@@ -207,7 +252,8 @@ namespace WebShopAPI.Services
             if(user.Image == null || user.Image == string.Empty)
             {
                 Console.WriteLine("------------PRAZNA SLIKA---------------");
-                return null;
+                response["statusCode"] = "400";
+                response["message"] += "\nImage must not be empty.";
             }
             #endregion ImageValidation
 
@@ -220,6 +266,10 @@ namespace WebShopAPI.Services
             {
                 newUser.Verification = "processing";
             }
+            else if (newUser.UserType == "buyer")
+            {
+                newUser.Verification = "verified";
+            }
             try
             {
                 User userToStore = _mapper.Map<User>(newUser);
@@ -228,7 +278,9 @@ namespace WebShopAPI.Services
             }
             catch(Exception ex)
             {
-                return null;
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
             }
 
             #endregion RegisteringUserInDataBase
@@ -242,6 +294,7 @@ namespace WebShopAPI.Services
             if (newUser.UserType == "buyer")
                 claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
+            claims.Add(new Claim("userId", newUser.UserId.ToString()));
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
@@ -251,8 +304,14 @@ namespace WebShopAPI.Services
                 signingCredentials: signinCredentials //kredencijali za potpis
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-            return tokenString;
+
             #endregion Token
+            if (response["statusCode"] == "200")
+            {
+                response["token"] = tokenString;
+            }
+            
+            return response;
         }
 
         public UserDto AddUser(UserDto newUser)

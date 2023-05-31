@@ -7,19 +7,20 @@ import Container from "@mui/material/Container";
 
 const defaultTheme = createTheme();
 
-const ProfileOverview = () => {
+const ProfileOverview = ({props}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    username: "JohnDoe",
-    email: "johndoe@example.com",
-    firstName: "John",
-    lastName: "Doe",
-    address: "123 Street, City",
-    dateOfBirth: "1990-01-01",
-    password: "********",
-    userType: "Regular",
+    userId: props.userId,
+    username: props.userName,
+    email: props.email,
+    firstName: props.firstName,
+    lastName: props.lastName,
+    address: props.address,
+    dateOfBirth: props.dateOfBirth,
+    password: props.password,
+    userType: props.userType,
     image: "",
-    verificationStatus: "Verified",
+    verificationStatus: props.verification,
   });
 
   const handleEdit = () => {
@@ -59,6 +60,12 @@ const ProfileOverview = () => {
               gap: "1rem",
             }}
           >
+            <TextField
+              label="User ID"
+              value={formData.userId}
+              disabled
+              fullWidth
+            />
             <TextField
               label="Username"
               value={formData.username}

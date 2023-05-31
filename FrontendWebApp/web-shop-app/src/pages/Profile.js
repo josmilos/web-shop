@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { useLoaderData } from "react-router-dom";
 import PageContent from "../components/PageContent";
 import ProfileOverview from "../components/ProfileOverview";
 
@@ -8,9 +9,10 @@ const content = {
   }
 
 const ProfilePage = () => {
+    const user = useLoaderData();
     return (<Fragment>
         <PageContent content={content}/>
-        <ProfileOverview/>
+        <ProfileOverview user={user}/>
     </Fragment>)
 }
 
