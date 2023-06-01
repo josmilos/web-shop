@@ -1,9 +1,8 @@
 import { Fragment } from "react";
-
 import PageContent from "../components/PageContent";
 import ProfileOverview from "../components/ProfileOverview";
 import {json } from "react-router-dom";
-import { extractTokenData } from "../service/UserService/AuthService";
+import { extractTokenData, getAuthToken } from "../service/UserService/AuthService";
 
 const content = {
     title:'Your Profile',
@@ -23,7 +22,11 @@ export default ProfilePage;
 export async function loader({request, params}) {
     const user = extractTokenData();
     const id = user["userId"]
-    const response = await fetch('https://localhost:7108/api/users/' + id);
+    const response = await fetch('https://localhost:7108/api/users/' + id, {
+        headers: {
+            "Authorization" : `Bearer ${getAuthToken()}`
+        }
+    });
   
     if(!response.ok){
         throw json({message: 'Could not fetch details for selected user.'}, {

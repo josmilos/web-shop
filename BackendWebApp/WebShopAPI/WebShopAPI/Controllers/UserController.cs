@@ -26,13 +26,20 @@ namespace WebShopAPI.Controllers
         public IActionResult Post([FromBody] UserDto userDto)
         {
             Dictionary<string, string> response = _userService.Register(userDto);
-            if (response["statusCode"] != "200") {
+            if(response["statusCode"] != "200") {
                 return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
             }
             else
             {
                 return Ok(new { StatusCode = response["statusCode"], token = response["token"] });
             }
+        }
+
+        [HttpGet("unverified-sellers")]
+        public IActionResult GetUnverifiedSellers()
+        {
+
+            return Ok(_userService.GetUnverifiedSellers());
         }
 
         [HttpGet("all")]

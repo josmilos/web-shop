@@ -12,14 +12,17 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import GoogleButton from "../components/GoogleButton";
 import { Form, json, redirect } from "react-router-dom";
-import { extractTokenData, storeAuthToken } from "../service/UserService/AuthService";
+import {
+  extractTokenData,
+  storeAuthToken,
+} from "../service/UserService/AuthService";
 import { useContext } from "react";
 import AuthContext, { updateAuth } from "../context/AuthProvider";
 
 const defaultTheme = createTheme();
 
 const LogInPage = () => {
-  const {setAuth} = useContext(AuthContext);
+  const { setAuth } = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -105,11 +108,11 @@ export async function action({ request, params }) {
     body: JSON.stringify(userData),
   });
 
+
   if (!response.ok) {
     throw json(
-      { message: "Could not authenticate user." },
-      { status: response["statusCode"] },
-      { serverMessage: response["message"] }
+      { message: response["message"] },
+      { status: response["statusCode"] }
     );
   }
 
@@ -119,5 +122,6 @@ export async function action({ request, params }) {
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 1);
   localStorage.setItem("expiration", expiration.toISOString());
+  
   return redirect("/dashboard");
 }

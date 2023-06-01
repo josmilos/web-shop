@@ -55,7 +55,7 @@ function MainNavigation() {
             )}
             {token && (
               <Form action="/logout" method="post">
-                <button>Logout</button>
+                <Button type="submit" style={{ color: "white" }}>Logout</Button>
               </Form>
             )}
           </Toolbar>

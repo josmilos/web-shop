@@ -1,7 +1,9 @@
 import { Fragment } from "react";
 import ProductItem from "./ProductItem";
+import { useLoaderData } from "react-router-dom";
 
-const ProductsList = ({products}) => {
+const ProductsList = () => {
+  const products = useLoaderData();
   return (
     <Fragment>
       {products.map((product) => (

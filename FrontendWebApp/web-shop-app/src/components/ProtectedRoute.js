@@ -10,11 +10,19 @@ import AuthContext from "../context/AuthProvider";
 const ProtectedRoute = (props) => {
   //const {auth} = useContext(AuthContext);
   const auth = extractTokenData();
+  let userRole = "";
+  let userVerified = "";
+  if (auth) {
+    userRole = auth["role"];
+    userVerified = auth["verification"];
+  }
 
   return (
     <>
-      {auth && props?.allowedRoles?.find((r) => auth.role?.includes(r)) ? (
+      {auth && props?.allowedRoles?.find((r) => auth.role?.includes(r)) && userVerified === "verified" ? (
         props.children
+      ) : (userVerified === "processing" || userVerified === "denied") ? (
+        <Navigate to="/unverified" />
       ) : auth?.userId ? (
         <Navigate to="/unathorized" />
       ) : (

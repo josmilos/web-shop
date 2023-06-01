@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -32,6 +33,7 @@ namespace WebShopAPI.Services
             response["statusCode"] = "200";
             response["message"] = "";
             UserCredentialsDto user = _mapper.Map<List<UserCredentialsDto>>(_dbContext.Users.ToList()).First(x => x.Email == credentialsDto.Email);
+            UserDto userDto = GetById(user.UserId);
 
             if(user == null)
             {
@@ -42,6 +44,8 @@ namespace WebShopAPI.Services
             
             if (BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password))
             {
+
+                
                 List<Claim> claims = new List<Claim>();
                 if (user.UserType == "admin")
                     claims.Add(new Claim(ClaimTypes.Role, "admin"));
@@ -51,6 +55,8 @@ namespace WebShopAPI.Services
                     claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
                 claims.Add(new Claim("userId", user.UserId.ToString()));
+                claims.Add(new Claim("verification", userDto.Verification.ToString()));
+
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
@@ -295,6 +301,7 @@ namespace WebShopAPI.Services
                 claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
             claims.Add(new Claim("userId", newUser.UserId.ToString()));
+            claims.Add(new Claim("verification", newUser.Verification.ToString()));
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
@@ -362,6 +369,21 @@ namespace WebShopAPI.Services
             _dbContext.SaveChanges();
 
             return _mapper.Map<UserDto>(user);
+        }
+
+        public List<UserDto> GetUnverifiedSellers()
+        {
+            List<UserDto> allUsers = GetUsers();
+            List<UserDto> unverifiedUsers = new List<UserDto>();
+            foreach(UserDto user in allUsers)
+            {
+                if(user.Verification == "processing")
+                {
+                    unverifiedUsers.Add(user);
+                }
+            }
+            return unverifiedUsers;
+
         }
     }
 }

@@ -42,7 +42,7 @@ export async function action({ request}) {
     body: JSON.stringify(userData),
   });
 
-  if(response.status === 422 || response.status === 401 || response.status === 400){
+  if(response.status === 422 || response.status === 401 || response.status === 400 || response.status === 403){
     return response;
   }
   if(!response.ok){
@@ -57,7 +57,7 @@ export async function action({ request}) {
 
   storeAuthToken(token);
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 0.5);
+  expiration.setHours(expiration.getHours() + 1);
   localStorage.setItem('expiration', expiration.toISOString());
   console.log(extractTokenData)
   return redirect('/dashboard');

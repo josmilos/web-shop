@@ -19,6 +19,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 import PageContent from "../components/PageContent";
+import { extractTokenData } from "../service/UserService/AuthService";
 
 <link
   rel="stylesheet"
@@ -36,67 +37,110 @@ const icons = {
 };
 
 const cards = [
-  { id: "profile", image: "", title: "My Profile", icon: "AccountCircle" },
-  { id: "new-product", image: "", title: "Add New Product", icon: "Add" },
+  {
+    id: "profile",
+    image: "",
+    title: "My Profile",
+    icon: "AccountCircle",
+    priv: ["admin", "seller", "buyer"],
+  },
+  {
+    id: "new-product",
+    image: "",
+    title: "Add New Product",
+    icon: "Add",
+    priv: ["seller"],
+  },
   {
     id: "new-order",
     image: "",
     title: "Create New Order",
     icon: "ShoppingCart",
+    priv: ["buyer"],
   },
-  { id: "order-history", image: "", title: "Order History", icon: "History" },
+  {
+    id: "order-history",
+    image: "",
+    title: "Order History",
+    icon: "History",
+    priv: ["buyer"],
+  },
   {
     id: "verification",
     image: "",
     title: "Verification",
     icon: "VerifiedUser",
+    priv: ["admin"],
   },
   {
     id: "pending-orders",
     image: "",
     title: "Pending Orders",
     icon: "PendingActions",
+    priv: ["seller"],
   },
   {
     id: "all-orders",
     image: "",
     title: "All Orders",
     icon: "FormatListBulleted",
+    priv: ["admin"],
   },
 ];
 
-const content = {
+const contentVerified = {
   title: "Dashboard",
   description:
     "Welcome to the dashboard. Choose one of the options listed below.",
 };
 
+const contentNonVerified = {
+  title: "Pending Verification",
+  description:
+    "Your account is not verified yet. Please wait for admin to approve your registration.",
+};
+
 const DashboardPage = () => {
   const token = useRouteLoaderData("root");
+  let userRole = "";
+  let userVerified = "";
+  const userToken = extractTokenData();
+  if (userToken) {
+    userRole = userToken["role"];
+    userVerified = userToken["verification"];
+  }
+
   return (
     <>
-      <PageContent content={content} />
-      {token &&
-        cards.map((page) => {
-          return (
-            <ButtonBase component={RouterLink} to={page.id} key={page.id}>
-              <ContainerCardGrid maxWidth="md">
-                <Grid container spacing={4}>
-                  <Grid item>
-                    <StyledCard sx={{ alignContent: "center" }}>
-                      {icons[page.icon]}
-                      <StyledCardContent>
-                        <Typography gutterBottom variant="h5">
-                          {page.title}
-                        </Typography>
-                      </StyledCardContent>
-                    </StyledCard>
+      {userVerified !== "verified" ? (
+        <PageContent content={contentNonVerified} />
+      ) : (
+        <>
+          <PageContent content={contentVerified} />
+          {cards.map((page) => {
+            return userRole && page?.priv?.find((r) => userRole?.includes(r)) ? (
+              <ButtonBase component={RouterLink} to={page.id} key={page.id}>
+                <ContainerCardGrid maxWidth="md">
+                  <Grid container spacing={4}>
+                    <Grid item>
+                      <StyledCard sx={{ alignContent: "center" }}>
+                        {icons[page.icon]}
+                        <StyledCardContent>
+                          <Typography gutterBottom variant="h5">
+                            {page.title}
+                          </Typography>
+                        </StyledCardContent>
+                      </StyledCard>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </ContainerCardGrid>
-            </ButtonBase>
-          );
-        })}
+                </ContainerCardGrid>
+              </ButtonBase>
+            ) : (
+              ""
+            );
+          })}
+        </>
+      )}
       {!token && (
         <Typography
           variant="h5"
@@ -104,11 +148,12 @@ const DashboardPage = () => {
           color="text.secondary"
           paragraph
         >
-          You must be logged in to see content of this page. Please log in.
+          You must be logged in to see the content of this page. Please log in.
         </Typography>
       )}
     </>
   );
 };
+
 
 export default DashboardPage;
