@@ -1,8 +1,9 @@
-import { redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+
 
 export function storeAuthToken(token){
     localStorage.setItem('token', token);
+
 }
 
 export function getAuthToken() {
@@ -36,7 +37,15 @@ export function tokenLoader() {
 
 export function extractTokenData(){
     const token = getAuthToken();
-    const decodedToken = jwt_decode(token);
+    if(token === null || token === 'EXPIRED'){
+        return null;
+    }
 
-    return decodedToken;
+    const decodedToken = jwt_decode(token);
+    const tokenData ={
+        "role": decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+        "userId": decodedToken.userId,
+        "verification": decodedToken.verification
+    }
+    return tokenData;
 }

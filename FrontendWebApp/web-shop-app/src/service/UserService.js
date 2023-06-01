@@ -1,7 +1,6 @@
 import { json, redirect } from "react-router-dom";
 
 export async function actionRegister({ request }) {
-    console.log("Problem")
   const data = await request.formData();
   const authData = {
     userName: data.get('username'),

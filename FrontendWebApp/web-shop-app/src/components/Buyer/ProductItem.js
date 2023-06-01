@@ -4,7 +4,7 @@ import {
   StyledCard,
   StyledCardMedia,
   StyledCardContent,
-} from "./ProductItemStyle";
+} from "../ProductItemStyle";
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 

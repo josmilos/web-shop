@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import PageContent from "../components/PageContent";
-import ProductForm from "../components/ProductForm";
+import ProductForm from "../components/Seller/ProductForm";
 
 const content = {
     title:'Add New Product',

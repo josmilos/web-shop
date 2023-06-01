@@ -12,5 +12,6 @@ namespace WebShopAPI.Interfaces
 
         Dictionary<string, string> Login(UserCredentialsDto credentialsDto);
         Dictionary<string, string> Register(UserDto userDto);
+        List<UserDto> GetUnverifiedSellers();
     }
 }
