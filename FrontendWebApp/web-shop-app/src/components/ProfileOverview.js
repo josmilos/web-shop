@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -7,20 +8,22 @@ import Container from "@mui/material/Container";
 
 const defaultTheme = createTheme();
 
-const ProfileOverview = ({props}) => {
+const ProfileOverview = () => {
+  const user = useLoaderData();
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    userId: props.userId,
-    username: props.userName,
-    email: props.email,
-    firstName: props.firstName,
-    lastName: props.lastName,
-    address: props.address,
-    dateOfBirth: props.dateOfBirth,
-    password: props.password,
-    userType: props.userType,
+    userId: user.userId,
+    username: user.userName,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    address: user.address,
+    dateOfBirth: user.dateOfBirth,
+    password: user.password,
+    userType: user.userType,
     image: "",
-    verificationStatus: props.verification,
+    verificationStatus: user.verification,
   });
 
   const handleEdit = () => {

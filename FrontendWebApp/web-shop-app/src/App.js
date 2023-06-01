@@ -12,7 +12,7 @@ import OrderHistoryPage from "./pages/OrderHistory";
 import VerificationPage from "./pages/Verification";
 import PendingOrdersPage from "./pages/PendingOrders";
 import AllOrdersPage from "./pages/AllOrders";
-import {loader as profileLoader} from './service/UserService/ProfileService'
+import {loader as profileLoader} from './pages/Profile';
 import {loader as productsLoader} from './service/ProductService/AllProductsService'
 import {action as actionRegister} from './pages/SignUp';
 import {action as actionLogin} from './pages/Login';

@@ -13,10 +13,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import GoogleButton from "../components/GoogleButton";
 import { Form, json, redirect } from "react-router-dom";
 import { extractTokenData, storeAuthToken } from "../service/UserService/AuthService";
+import { useContext } from "react";
+import AuthContext, { updateAuth } from "../context/AuthProvider";
 
 const defaultTheme = createTheme();
 
 const LogInPage = () => {
+  const {setAuth} = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -112,11 +115,9 @@ export async function action({ request, params }) {
 
   const resData = await response.json();
   const token = resData.token;
-  console.log(resData);
   storeAuthToken(token);
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 1);
   localStorage.setItem("expiration", expiration.toISOString());
-
   return redirect("/dashboard");
 }

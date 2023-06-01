@@ -1,7 +1,9 @@
 import { Fragment } from "react";
-import { useLoaderData } from "react-router-dom";
+
 import PageContent from "../components/PageContent";
 import ProfileOverview from "../components/ProfileOverview";
+import {json } from "react-router-dom";
+import { extractTokenData } from "../service/UserService/AuthService";
 
 const content = {
     title:'Your Profile',
@@ -9,11 +11,29 @@ const content = {
   }
 
 const ProfilePage = () => {
-    const user = useLoaderData();
+    
     return (<Fragment>
         <PageContent content={content}/>
-        <ProfileOverview user={user}/>
+        <ProfileOverview/>
     </Fragment>)
 }
 
 export default ProfilePage;
+
+export async function loader({request, params}) {
+    const user = extractTokenData();
+    const id = user["userId"]
+    const response = await fetch('https://localhost:7108/api/users/' + id);
+  
+    if(!response.ok){
+        throw json({message: 'Could not fetch details for selected user.'}, {
+            status: 500
+          })
+    }
+    else{
+        const resData = await response.json();
+        console.log(resData)
+        return resData;
+        
+    }
+  }
