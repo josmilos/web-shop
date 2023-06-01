@@ -1,14 +1,17 @@
 import { Navigate } from "react-router-dom";
-import { getAuthToken } from "../service/UserService/AuthService";
+import { extractTokenData, getAuthToken } from "../service/UserService/AuthService";
+import useAuth from "../hooks/useAuth";
 
 const ProtectedRoute = (props) => {
-    const token = getAuthToken();
-    if(!token){
-        return <Navigate to='/log-in'/>
-    }
-    else{
-        return props.children;
-    }
+    const {auth} = useAuth();
+    console.log(auth)
+    return (
+        auth?.role?.find(r => props.allowedRoles?.includes(r))
+            ? props.children
+            : auth?.userId  
+                ? <Navigate to='/unathorized'/>
+                : <Navigate to='/log-in'/>
+    )
 }
 
 export default ProtectedRoute;

@@ -2,7 +2,7 @@ import { Autocomplete } from "@mui/material";
 import { alignProperty } from "@mui/material/styles/cssUtils";
 import { json, redirect, useActionData } from "react-router-dom";
 import SignUpForm from "../components/SignUpForm";
-import { storeAuthToken } from "../service/UserService/AuthService";
+import { extractTokenData, storeAuthToken } from "../service/UserService/AuthService";
 
 
 
@@ -59,6 +59,6 @@ export async function action({ request}) {
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 0.5);
   localStorage.setItem('expiration', expiration.toISOString());
-
+  console.log(extractTokenData)
   return redirect('/dashboard');
 }

@@ -17,6 +17,7 @@ import { extractTokenData, storeAuthToken } from "../service/UserService/AuthSer
 const defaultTheme = createTheme();
 
 const LogInPage = () => {
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -116,8 +117,6 @@ export async function action({ request, params }) {
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 1);
   localStorage.setItem("expiration", expiration.toISOString());
-  const decodedToken = extractTokenData();
-
 
   return redirect("/dashboard");
 }

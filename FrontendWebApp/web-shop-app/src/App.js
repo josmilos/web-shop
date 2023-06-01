@@ -19,6 +19,7 @@ import {action as actionLogin} from './pages/Login';
 import {action as logoutAction} from './pages/Logout';
 import {tokenLoader} from './service/UserService/AuthService'
 import ProtectedRoute from "./components/ProtectedRoute";
+import Unauthorized from "./pages/Unauthorized";
 
 
 const router = createBrowserRouter([
@@ -43,44 +44,48 @@ const router = createBrowserRouter([
         action: actionLogin
       },
       {
+        path: "unathorized",
+        element: <Unauthorized/>,
+      },
+      {
         path: "dashboard",
         children: [
           {
             index: true,
-            element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
+            element: <ProtectedRoute allowedRoles={["admin", "seller", "buyer"]}><DashboardPage /></ProtectedRoute>,
           },
           {
             path: "profile",
-            element: <ProfilePage /> ,
+            element: <ProtectedRoute allowedRoles={["admin", "seller", "buyer"]}><ProfilePage /></ProtectedRoute> ,
             loader: profileLoader
           },
           {
             path: "new-product",
-            element: <NewProductPage />,
+            element: <ProtectedRoute allowedRoles={["seller"]}><NewProductPage /></ProtectedRoute>,
           },
           {
             path: "new-order",
-            element: <NewOrderPage />,
+            element: <ProtectedRoute allowedRoles={["buyer"]}><NewOrderPage /></ProtectedRoute>,
             loader: productsLoader
           },
           {
             path: "order-history",
-            element: <OrderHistoryPage />,
+            element: <ProtectedRoute allowedRoles={["buyer"]}><OrderHistoryPage /></ProtectedRoute>,
             loader: () => {}
           },
           {
             path: "verification",
-            element: <VerificationPage />,
+            element: <ProtectedRoute allowedRoles={["admin"]}><VerificationPage /></ProtectedRoute>,
             loader: () => {}
           },
           {
             path: "pending-orders",
-            element: <PendingOrdersPage />,
+            element: <ProtectedRoute allowedRoles={["seller"]}><PendingOrdersPage /></ProtectedRoute>,
             loader: () => {}
           },
           {
             path: "all-orders",
-            element: <AllOrdersPage />,
+            element: <ProtectedRoute allowedRoles={["admin"]}><AllOrdersPage /></ProtectedRoute>,
             loader: () => {}
           },
         ],
