@@ -9,6 +9,10 @@ namespace WebShopAPI.Dto
         public string Address { get; set; }
 
         public DateTime OrderDate { get; set; }
-        public List<Product> Products { get; set; }
+        public int USerBuyerId { get; set; }
+        public double TotalAmount { get; set; }
+        public string DeliveryStatus { get; set; }
+        public string DeliveryTime { get; set; }
+        public List<int> Products { get; set; }
     }
 }

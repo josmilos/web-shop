@@ -42,7 +42,10 @@ namespace WebShopAPI.Migrations
                     Comment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserBuyerId = table.Column<int>(type: "int", nullable: false)
+                    UserBuyerId = table.Column<int>(type: "int", nullable: false),
+                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalAmount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,38 +81,34 @@ namespace WebShopAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderProduct",
+                name: "ProductOrder",
                 columns: table => new
                 {
-                    OrderProductsProductId = table.Column<int>(type: "int", nullable: false),
-                    OrdersOrderId = table.Column<int>(type: "int", nullable: false)
+                    ProductOrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductQuantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderProduct", x => new { x.OrderProductsProductId, x.OrdersOrderId });
+                    table.PrimaryKey("PK_ProductOrder", x => x.ProductOrderId);
                     table.ForeignKey(
-                        name: "FK_OrderProduct_Orders_OrdersOrderId",
-                        column: x => x.OrdersOrderId,
+                        name: "FK_ProductOrder_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderProduct_Products_OrderProductsProductId",
-                        column: x => x.OrderProductsProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrderId");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderProduct_OrdersOrderId",
-                table: "OrderProduct",
-                column: "OrdersOrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserBuyerId",
                 table: "Orders",
                 column: "UserBuyerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductOrder_OrderId",
+                table: "ProductOrder",
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_SellerId",
@@ -133,13 +132,13 @@ namespace WebShopAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderProduct");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
+                name: "ProductOrder");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Users");

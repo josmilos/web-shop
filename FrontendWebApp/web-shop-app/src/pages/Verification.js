@@ -32,7 +32,6 @@ export async function loader({request, params}) {
     }
     else{
         const resData = await response.json();
-        console.log(resData)
         return resData;
     }
   }

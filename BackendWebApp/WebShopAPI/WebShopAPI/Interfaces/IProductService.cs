@@ -9,5 +9,7 @@ namespace WebShopAPI.Interfaces
         ProductDto AddProduct(ProductDto newProduct);
         ProductDto UpdateProduct(int id, ProductDto newProductData);
         bool DeleteProduct(int id);
+
+        List<ProductDto> GetSellerProducts(int id);
     }
 }

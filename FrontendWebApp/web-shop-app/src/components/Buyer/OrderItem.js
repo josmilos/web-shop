@@ -23,6 +23,7 @@ const OrderItem = ({order}) => {
                 <TableCell>Status</TableCell>
                 <TableCell>Delivery Time</TableCell>
                 <TableCell>Total Amount</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
       {order ? (
@@ -30,7 +31,7 @@ const OrderItem = ({order}) => {
             <TableBody>
                 <TableRow key={order.orderId}>
                   <TableCell>{order.orderId}</TableCell>
-                  <TableCell>{order.date}</TableCell>
+                  <TableCell>{order.orderDate}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.deliveryTime}</TableCell>
                   <TableCell>{order.totalAmount}</TableCell>

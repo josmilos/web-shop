@@ -15,16 +15,11 @@ namespace WebShopAPI.Infrastructure.Configurations
             builder.Property(x => x.Description).HasMaxLength(200);
 
 
-
-
-
-
-
-
             builder.HasOne(x => x.Seller)
                 .WithMany(x => x.UserProducts)
                 .HasForeignKey(x => x.SellerId)
                 .IsRequired(false);
+            
 
         }
     }

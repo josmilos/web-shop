@@ -28,6 +28,12 @@ namespace WebShopAPI.Controllers
             return Ok(_productService.GetById(id));
         }
 
+        [HttpGet("seller-products/{id}")]
+        public IActionResult GetSellerItems(int id)
+        {
+            return Ok(_productService.GetSellerProducts(id));
+        }
+
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
@@ -43,10 +49,6 @@ namespace WebShopAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            if (_productService.DeleteProduct(id))
-            {
-                return Ok(_productService.DeleteProduct(id));
-            }
             return Ok(_productService.DeleteProduct(id));
         }
     }
