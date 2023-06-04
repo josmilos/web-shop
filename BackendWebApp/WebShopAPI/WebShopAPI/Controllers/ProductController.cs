@@ -40,7 +40,7 @@ namespace WebShopAPI.Controllers
             return Ok(_productService.AddProduct(product));
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public IActionResult ChangeProduct(int id, [FromBody] ProductDto product)
         {
             return Ok(_productService.UpdateProduct(id, product));

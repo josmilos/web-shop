@@ -30,7 +30,7 @@ import Unverified from "./pages/Unverified";
 import SellerProductsPage, {loader as sellerProductsLoader} from "./pages/SellerProducts";
 import {action as actionNewProduct} from "./pages/NewProduct";
 import NewProductPage from "./pages/NewProduct";
-import EditSellerProductPage from "./pages/EditSellerProduct";
+import EditSellerProductPage, {action as actionEditProduct}from "./pages/EditSellerProduct";
 import SellerProductDetailPage, {loader as loaderProduct, action as actionDeleteProduct} from "./pages/SellerProductDetail"
 
 const router = createBrowserRouter([
@@ -115,6 +115,7 @@ const router = createBrowserRouter([
                         <EditSellerProductPage />
                       </ProtectedRoute>
                     ),
+                    action: actionEditProduct
                   },
                 ],
               },

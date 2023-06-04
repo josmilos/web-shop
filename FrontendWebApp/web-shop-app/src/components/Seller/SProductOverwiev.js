@@ -14,9 +14,6 @@ const ProductDetailsPage = ({product}) => {
 }
   return (
     <Box sx={{ padding: "2rem" }}>
-      <Typography variant="h4" gutterBottom>
-        Product Details
-      </Typography>
       <Box display="flex" gap="2rem" alignItems="center">
         <img
           src={product.image}

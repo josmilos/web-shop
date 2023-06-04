@@ -1,12 +1,20 @@
 import { Fragment } from "react";
 import ProductForm from "../components/Seller/ProductForm";
 import { extractTokenData, getAuthToken } from "../service/UserService/AuthService";
-import { json, redirect, useRouteLoaderData } from "react-router-dom";
+import { json, redirect, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import SProductOverwiev from "../components/Seller/SProductOverwiev";
+import PageContent from "../components/PageContent";
+
+const content = {
+  title: "Product Details",
+  description:
+    "Overview of your created product. You can check details and edit them or delete entire product.",
+};
 
 const SellerProductDetailPage = () => {
     const product = useRouteLoaderData('product-detail');
     return (<Fragment>
+      <PageContent content={content}/>
         <SProductOverwiev product={product}/>
     </Fragment>)
 }
@@ -18,7 +26,7 @@ export async function loader({ request, params }) {
     const response = await fetch("https://localhost:7108/api/products/" + id, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
+        "Authorization": `Bearer ${getAuthToken()}`,
       },
     });
   
@@ -35,7 +43,7 @@ export async function loader({ request, params }) {
     }
   }
 
-  export async function action({ params, request }) {
+  export async function action({ request, params }) {
     const productId = params.productId;
     console.log(productId)
     const response = await fetch('https://localhost:7108/api/products/' + productId, {
