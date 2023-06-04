@@ -19,9 +19,9 @@ namespace WebShopAPI.Infrastructure.Configurations
                 .HasForeignKey(x => x.UserBuyerId)
                 .IsRequired(false);
 
-            
             builder.HasMany(x => x.OrderProducts)
-                .WithMany(x => x.Orders);
+                .WithOne(x => x.Order);
+
         }
     }
 }

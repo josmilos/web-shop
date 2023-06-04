@@ -22,7 +22,7 @@ const ProfileOverview = () => {
     dateOfBirth: user.dateOfBirth,
     password: user.password,
     userType: user.userType,
-    image: "",
+    image: user.image,
     verificationStatus: user.verification,
   });
 
@@ -115,7 +115,7 @@ const ProfileOverview = () => {
             />
             <TextField
               label="Password"
-              value={formData.password}
+              value={""}
               disabled={!isEditing}
               fullWidth
               name="password"

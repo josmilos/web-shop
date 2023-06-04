@@ -10,21 +10,45 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import { json, redirect } from "react-router-dom";
+import { getAuthToken } from "../../service/UserService/AuthService";
 
 const SellerItem = ({ seller }) => {
+  async function updateVerificationStatus(status) {
+    const response = await fetch(
+      "https://localhost:7108/api/users/verify-user/" + seller.userId,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(status),
+      }
+    );
+
+    if (!response.ok) {
+      throw json(
+        { message: response["message"] },
+        { status: response["statusCode"] }
+      );
+    }
+
+    window.location.reload();
+  }
+
+  const handleVerify = async () => {
+    await updateVerificationStatus("approve");
+  };
+
+  const handleDeny = async () => {
+    await updateVerificationStatus("deny");
+  };
+
   return (
     <div>
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Seller ID</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
           {seller ? (
             <TableBody>
               <TableRow key={seller.userId}>
@@ -34,10 +58,24 @@ const SellerItem = ({ seller }) => {
                 <TableCell>{seller.firstName}</TableCell>
                 <TableCell>{seller.verification}</TableCell>
                 <TableCell>
-                  <Button disabled={seller.verification === "verified" || seller.verification === "denied"}>
-                    Verify
+                  <Button
+                    variant="contained"
+                    disabled={
+                      seller.verification === "verified" ||
+                      seller.verification === "denied"
+                    }
+                    onClick={() => handleVerify()}
+                  >
+                    Approve
                   </Button>
-                  <Button disabled={seller.verification === "verified" || seller.verification === "denied"}>
+                  <Button
+                    variant="contained" color="error"
+                    disabled={
+                      seller.verification === "verified" ||
+                      seller.verification === "denied"
+                    }
+                    onClick={() => handleDeny()}
+                  >
                     Deny
                   </Button>
                 </TableCell>

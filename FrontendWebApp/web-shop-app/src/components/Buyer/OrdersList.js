@@ -7,7 +7,7 @@ const OrdersList = () => {
   return (
     <Fragment>
       {orders.map((order) => (
-        <OrderItem order={order} key={order.id}></OrderItem>
+        <OrderItem order={order} key={order.orderId}></OrderItem>
       ))}
     </Fragment>
   );

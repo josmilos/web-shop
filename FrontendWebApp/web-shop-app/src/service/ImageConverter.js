@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-const ImageConverter = (props) => {
+export const ImageEncode = (props) => {
     const [image, setImage] = useState("");
 
     const imageHandler = (event) =>{
@@ -12,7 +12,30 @@ const ImageConverter = (props) => {
             setImage(reader.result);
         }
     }
-
+    return image;
 }
 
-export default ImageConverter;
+export const ImageDecode = ({ encodedImage }) => {
+    const [decodedImage, setDecodedImage] = useState("");
+  
+    const decodeImage = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL("image/jpeg");
+        setDecodedImage(dataURL);
+      };
+      img.src = encodedImage;
+    };
+  
+    return (
+      <div>
+        <button onClick={decodeImage}>Decode Image</button>
+        {decodedImage && <img src={decodedImage} alt="" />}
+      </div>
+    );
+  };

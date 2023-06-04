@@ -21,7 +21,10 @@ namespace WebShopAPI.Services
 
         public ProductDto AddProduct(ProductDto newProduct)
         {
+            User seller = _dbContext.Users.Find(newProduct.SellerId);
+            Console.WriteLine(seller);
             Product product = _mapper.Map<Product>(newProduct);
+            product.Seller = seller;
             _dbContext.Products.Add(product);
             _dbContext.SaveChanges();
             return _mapper.Map<ProductDto>(product);
@@ -51,6 +54,21 @@ namespace WebShopAPI.Services
         public List<ProductDto> GetProducts()
         {
             return _mapper.Map<List<ProductDto>>(_dbContext.Products.ToList());
+        }
+
+        public List<ProductDto> GetSellerProducts(int id)
+        {
+            List<ProductDto> allProducts= _mapper.Map<List<ProductDto>>(_dbContext.Products.ToList());
+            List<ProductDto> sellerProducts = new List<ProductDto>();
+
+            foreach(ProductDto product in allProducts)
+            {
+                if(product.SellerId == id)
+                {
+                    sellerProducts.Add(product);
+                }
+            }
+            return sellerProducts;
         }
 
         public ProductDto UpdateProduct(int id, ProductDto newProductData)

@@ -385,5 +385,21 @@ namespace WebShopAPI.Services
             return unverifiedUsers;
 
         }
+
+        public UserDto VerifyUser(int id, string option)
+        {
+            User user = _dbContext.Users.Find(id);
+            if(option == "approve")
+            {
+                user.Verification = "verified";
+            }
+            else if(option == "deny")
+            {
+                user.Verification = "denied";
+            }
+
+            _dbContext.SaveChanges();
+            return _mapper.Map<UserDto>(user);
+        }
     }
 }

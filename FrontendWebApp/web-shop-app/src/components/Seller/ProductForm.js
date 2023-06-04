@@ -7,6 +7,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import { Form, json, Navigate, useNavigate } from "react-router-dom";
+
 
 const defaultTheme = createTheme();
 
@@ -46,13 +48,11 @@ const ProductForm = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <Box
           noValidate
-          component="form"
-          onSubmit={handleSubmit}
           sx={{
             mt: 3,
             width: "100%",
@@ -60,64 +60,70 @@ const ProductForm = () => {
             gap: "1rem",
           }}
         >
-          <TextField
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-            sx={{ width: "35%" }}
-          />
-          <TextField
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-            sx={{ width: "35%" }}
-          />
-          <TextField
-            label="Price"
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-            sx={{ width: "35%" }}
-          />
-          <TextField
-            label="Quantity"
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-            sx={{ width: "35%" }}
-          />
-          <Button
-            component="label"
-            variant="outlined"
-            fullWidth
-            startIcon={<UploadFileIcon />}
-            sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
-          >
-            Upload Picture
-            <input type="file" accept="image/*" id="img" name="img" hidden />
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 3, mb: 2, width: "35%" }}
-          >
-            Add Product
-          </Button>
+          <Form method="post">
+            <TextField
+              label="Name"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              sx={{ width: "35%" }}
+            />
+            <TextField
+              label="Description"
+              value={description}
+              name="description"
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              fullWidth
+              multiline
+              rows={4}
+              margin="normal"
+              sx={{ width: "35%" }}
+            />
+            <TextField
+              label="Price"
+              type="number"
+              value={price}
+              name="price"
+              onChange={(e) => setPrice(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              sx={{ width: "35%" }}
+            />
+            <TextField
+              label="Quantity"
+              type="number"
+              value={quantity}
+              name="quantity"
+              onChange={(e) => setQuantity(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              sx={{ width: "35%" }}
+            />
+            <Button
+              component="label"
+              variant="outlined"
+              fullWidth
+              startIcon={<UploadFileIcon />}
+              sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
+            >
+              Upload Picture
+              <input type="file" accept="image/*" id="img" name="img" hidden />
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ mt: 3, mb: 2, width: "35%" }}
+            >
+              Add Product
+            </Button>
+          </Form>
         </Box>
       </Box>
     </ThemeProvider>
@@ -125,3 +131,5 @@ const ProductForm = () => {
 };
 
 export default ProductForm;
+
+

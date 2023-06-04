@@ -45,7 +45,7 @@ const cards = [
     priv: ["admin", "seller", "buyer"],
   },
   {
-    id: "new-product",
+    id: "my-products",
     image: "",
     title: "Add New Product",
     icon: "Add",
@@ -63,12 +63,12 @@ const cards = [
     image: "",
     title: "Order History",
     icon: "History",
-    priv: ["buyer"],
+    priv: ["buyer", "seller"],
   },
   {
     id: "verification",
     image: "",
-    title: "Verification",
+    title: "Seller Verification",
     icon: "VerifiedUser",
     priv: ["admin"],
   },

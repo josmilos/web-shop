@@ -16,13 +16,11 @@ import {
   extractTokenData,
   storeAuthToken,
 } from "../service/UserService/AuthService";
-import { useContext } from "react";
-import AuthContext, { updateAuth } from "../context/AuthProvider";
 
 const defaultTheme = createTheme();
 
 const LogInPage = () => {
-  const { setAuth } = useContext(AuthContext);
+
 
   return (
     <ThemeProvider theme={defaultTheme}>

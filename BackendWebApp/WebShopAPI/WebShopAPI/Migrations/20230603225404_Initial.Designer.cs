@@ -12,7 +12,7 @@ using WebShopAPI.Infrastructure;
 namespace WebShopAPI.Migrations
 {
     [DbContext(typeof(WebShopDbContext))]
-    [Migration("20230601202033_Initial")]
+    [Migration("20230603225404_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,21 +24,6 @@ namespace WebShopAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<int>("OrderProductsProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrdersOrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderProductsProductId", "OrdersOrderId");
-
-                    b.HasIndex("OrdersOrderId");
-
-                    b.ToTable("OrderProduct");
-                });
 
             modelBuilder.Entity("WebShopAPI.Models.Order", b =>
                 {
@@ -58,8 +43,19 @@ namespace WebShopAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("DeliveryStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeliveryTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
 
                     b.Property<int>("UserBuyerId")
                         .HasColumnType("int");
@@ -107,6 +103,30 @@ namespace WebShopAPI.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WebShopAPI.Models.ProductOrder", b =>
+                {
+                    b.Property<int>("ProductOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductOrderId"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductOrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ProductOrder");
                 });
 
             modelBuilder.Entity("WebShopAPI.Models.User", b =>
@@ -174,21 +194,6 @@ namespace WebShopAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.HasOne("WebShopAPI.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("OrderProductsProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebShopAPI.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("WebShopAPI.Models.Order", b =>
                 {
                     b.HasOne("WebShopAPI.Models.User", "UserBuyer")
@@ -205,6 +210,20 @@ namespace WebShopAPI.Migrations
                         .HasForeignKey("SellerId");
 
                     b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("WebShopAPI.Models.ProductOrder", b =>
+                {
+                    b.HasOne("WebShopAPI.Models.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("WebShopAPI.Models.Order", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 
             modelBuilder.Entity("WebShopAPI.Models.User", b =>

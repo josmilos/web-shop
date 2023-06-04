@@ -76,5 +76,10 @@ namespace WebShopAPI.Controllers
             return Ok(_userService.DeleteUser(id)); // TREBA NEKI STATUS CODE
         }
 
+        [HttpPatch("verify-user/{id}")]
+        public IActionResult VerifyUser(int id, [FromBody] string verification)
+        {
+            return Ok(_userService.VerifyUser(id, verification));
+        }
     }
 }
