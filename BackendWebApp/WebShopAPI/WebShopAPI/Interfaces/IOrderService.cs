@@ -10,5 +10,7 @@ namespace WebShopAPI.Interfaces
         OrderDto AddOrder(OrderDto newOrder);
         OrderDto UpdateOrder(int id, OrderDto newOrderData);
         bool DeleteOrder(int id);
+        List<OrderDto> GetSellerPendingOrders(int id);
+        List<OrderDto> GetSellerDeliveredOrders(int id);
     }
 }

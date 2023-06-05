@@ -45,7 +45,8 @@ export function extractTokenData(){
     const tokenData ={
         "role": decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
         "userId": decodedToken.userId,
-        "verification": decodedToken.verification
+        "verification": decodedToken.verification,
+        "userType": decodedToken.userType
     }
     return tokenData;
 }

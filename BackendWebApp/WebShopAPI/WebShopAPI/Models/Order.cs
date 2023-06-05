@@ -8,8 +8,8 @@
         public DateTime OrderDate { get; set; }
         public User UserBuyer { get; set; }
         public int UserBuyerId { get; set; }
-        public  string DeliveryStatus { get; set; }
-        public string DeliveryTime { get; set; }
+        public  string Status { get; set; }
+        public DateTime DeliveryTime { get; set; }
         public double TotalAmount { get; set; }
         public List<ProductOrder> OrderProducts { get; set; }
     }

@@ -11,7 +11,7 @@ namespace WebShopAPI.Interfaces
         bool DeleteUser(int id);
 
         Dictionary<string, string> Login(UserCredentialsDto credentialsDto);
-        Dictionary<string, string> Register(UserDto userDto);
+        Task<Dictionary<string, string>> Register(UserDto userDto);
         List<UserDto> GetUnverifiedSellers();
 
         UserDto VerifyUser(int Id, string option);

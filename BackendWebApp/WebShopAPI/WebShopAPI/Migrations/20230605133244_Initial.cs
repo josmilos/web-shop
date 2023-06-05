@@ -43,8 +43,8 @@ namespace WebShopAPI.Migrations
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserBuyerId = table.Column<int>(type: "int", nullable: false),
-                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -81,7 +81,7 @@ namespace WebShopAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductOrder",
+                name: "ProductOrders",
                 columns: table => new
                 {
                     ProductOrderId = table.Column<int>(type: "int", nullable: false)
@@ -92,9 +92,9 @@ namespace WebShopAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductOrder", x => x.ProductOrderId);
+                    table.PrimaryKey("PK_ProductOrders", x => x.ProductOrderId);
                     table.ForeignKey(
-                        name: "FK_ProductOrder_Orders_OrderId",
+                        name: "FK_ProductOrders_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId");
@@ -106,8 +106,8 @@ namespace WebShopAPI.Migrations
                 column: "UserBuyerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductOrder_OrderId",
-                table: "ProductOrder",
+                name: "IX_ProductOrders_OrderId",
+                table: "ProductOrders",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
@@ -132,7 +132,7 @@ namespace WebShopAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProductOrder");
+                name: "ProductOrders");
 
             migrationBuilder.DropTable(
                 name: "Products");

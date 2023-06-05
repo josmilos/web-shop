@@ -56,13 +56,14 @@ namespace WebShopAPI.Services
 
                 claims.Add(new Claim("userId", user.UserId.ToString()));
                 claims.Add(new Claim("verification", userDto.Verification.ToString()));
+                claims.Add(new Claim("userType", user.UserType.ToString()));
 
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
                     issuer: "http://localhost:44398", //url servera koji je izdao token
                     claims: claims, //claimovi
-                    expires: DateTime.Now.AddMinutes(30), //vazenje tokena u minutama
+                    expires: DateTime.Now.AddMinutes(60), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -81,7 +82,7 @@ namespace WebShopAPI.Services
             }
         }
 
-        public Dictionary<string, string> Register(UserDto userDto) {
+        public async Task<Dictionary<string, string>> Register(UserDto userDto) {
 
             Dictionary<string, string> response = new Dictionary<string, string>();
             response["statusCode"] = "200";
@@ -268,7 +269,8 @@ namespace WebShopAPI.Services
             Console.WriteLine("UPISAN");
             UserDto newUser = userDto;
             newUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            if(newUser.UserType == "seller")
+            List<Claim> claims = new List<Claim>();
+            if (newUser.UserType == "seller")
             {
                 newUser.Verification = "processing";
             }
@@ -280,7 +282,9 @@ namespace WebShopAPI.Services
             {
                 User userToStore = _mapper.Map<User>(newUser);
                 _dbContext.Users.Add(userToStore);
-                _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
+                int userId = userToStore.UserId;
+                claims.Add(new Claim("userId", userId.ToString()));
             }
             catch(Exception ex)
             {
@@ -292,7 +296,6 @@ namespace WebShopAPI.Services
             #endregion RegisteringUserInDataBase
 
             #region Token
-            List<Claim> claims = new List<Claim>();
             if (newUser.UserType == "admin")
                 claims.Add(new Claim(ClaimTypes.Role, "admin"));
             if (newUser.UserType == "seller")
@@ -300,14 +303,15 @@ namespace WebShopAPI.Services
             if (newUser.UserType == "buyer")
                 claims.Add(new Claim(ClaimTypes.Role, "buyer"));
 
-            claims.Add(new Claim("userId", newUser.UserId.ToString()));
+
+            claims.Add(new Claim("userType", newUser.UserType.ToString()));
             claims.Add(new Claim("verification", newUser.Verification.ToString()));
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
                 issuer: "http://localhost:44398", //url servera koji je izdao token
                 claims: claims, //claimovi
-                expires: DateTime.Now.AddMinutes(20), //vazenje tokena u minutama
+                expires: DateTime.Now.AddMinutes(60), //vazenje tokena u minutama
                 signingCredentials: signinCredentials //kredencijali za potpis
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);

@@ -26,10 +26,11 @@ export default ProfilePage;
 export async function loader({ request, params }) {
   const user = extractTokenData();
   const id = user["userId"];
+  console.log(id)
   const response = await fetch("https://localhost:7108/api/users/" + id, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getAuthToken()}`,
+      "Authorization": `Bearer ${getAuthToken()}`,
     },
   });
 

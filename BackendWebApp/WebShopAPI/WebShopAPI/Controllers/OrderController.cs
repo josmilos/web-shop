@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebShopAPI.Dto;
 using WebShopAPI.Interfaces;
+using WebShopAPI.Services;
 
 namespace WebShopAPI.Controllers
 {
@@ -26,6 +27,18 @@ namespace WebShopAPI.Controllers
         public IActionResult Get(int id)
         {
             return Ok(_orderService.GetById(id));
+        }
+
+        [HttpGet("seller-pending/{id}")]
+        public IActionResult GetSellerPendingOrders(int id)
+        {
+            return Ok(_orderService.GetSellerPendingOrders(id));
+        }
+
+        [HttpGet("seller-delivered/{id}")]
+        public IActionResult GetSellerDeliveredOrders(int id)
+        {
+            return Ok(_orderService.GetSellerDeliveredOrders(id));
         }
 
         [HttpPost]

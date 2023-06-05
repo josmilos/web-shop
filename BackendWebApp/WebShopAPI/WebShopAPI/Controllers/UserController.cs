@@ -23,9 +23,9 @@ namespace WebShopAPI.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Post([FromBody] UserDto userDto)
+        public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
-            Dictionary<string, string> response = _userService.Register(userDto);
+            Dictionary<string, string> response = await _userService.Register(userDto);
             if(response["statusCode"] != "200") {
                 return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
             }
