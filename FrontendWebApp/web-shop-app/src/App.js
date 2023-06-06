@@ -32,6 +32,7 @@ import {action as actionNewProduct} from "./pages/NewProduct";
 import NewProductPage from "./pages/NewProduct";
 import EditSellerProductPage, {action as actionEditProduct}from "./pages/EditSellerProduct";
 import SellerProductDetailPage, {loader as loaderProduct, action as actionDeleteProduct} from "./pages/SellerProductDetail"
+import CartProvider from "./store/CartProvider";
 
 const router = createBrowserRouter([
   {
@@ -187,7 +188,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return <CartProvider><RouterProvider router={router} /></CartProvider>;
 };
 
 export default App;

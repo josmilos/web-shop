@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import {
   ContainerCardGrid,
   StyledCard,
@@ -7,11 +7,24 @@ import {
 } from "../ProductItemStyle";
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import CartContext from "../../store/cart-context";
 
 const ProductItem = ({product}) => {
+  const cartCtx = useContext(CartContext);
+  const addToCartHandler = () => {
+    console.log('OVDE SAM')
+    cartCtx.addProduct({
+      productId: product.productId,
+      name: product.name,
+      description: product.description,
+      price: product.price.toFixed(2),
+      quantity: 1,
+      image: product.image,
+      sellerId: product.sellerId
+    });
+  }
   return (
     <Fragment>
-      <ButtonBase component={RouterLink} to={"/"}>
         <ContainerCardGrid maxWidth="md">
           <Grid container spacing={4}>
             <Grid item>
@@ -27,13 +40,13 @@ const ProductItem = ({product}) => {
                   <Typography>{product.description}</Typography>
                   <Typography>Price: {product.price}</Typography>
                   <Typography>Available: {product.quantity}</Typography>
-                  <Button component={RouterLink} to={"/"}>Buy</Button>
+                  <button onClick={addToCartHandler}>Add to Cart</button>
+                  <Button onClick={()=> addToCartHandler()}>Add to Cart</Button>
                 </StyledCardContent>
               </StyledCard>
             </Grid>
           </Grid>
         </ContainerCardGrid>
-      </ButtonBase>
     </Fragment>
   );
 };

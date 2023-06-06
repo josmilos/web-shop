@@ -2,6 +2,7 @@ import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 import MainNavigation from "../components/MainNavigation";
 import React, { Fragment, useEffect } from "react";
 import { getTokenDuration } from "../service/UserService/AuthService";
+import CartProvider from "../store/CartProvider";
 
 const RootLayout = () => {
   const token = useLoaderData();
@@ -23,12 +24,14 @@ const RootLayout = () => {
   }, [token, submit]);
 
   return (
-    <Fragment>
-      <MainNavigation />
-      <main>
-        <Outlet />
-      </main>
-    </Fragment>
+      <Fragment>
+        <CartProvider>
+        <MainNavigation />
+        <main>
+          <Outlet />
+        </main>
+        </CartProvider>
+      </Fragment>
   );
 };
 

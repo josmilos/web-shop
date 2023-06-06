@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import { Form, useRouteLoaderData } from "react-router-dom";
 import HeaderCartButton from "./HeaderCartButton";
 import Cart from "./Cart/Cart";
+import CartProvider from "../store/CartProvider";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#53A7E1",
@@ -41,8 +42,9 @@ function MainNavigation() {
 
   return (
     <Fragment>
+      <CartProvider>
       {CartIsShown && <Cart onClose={hideCartHandler}/>}
-      
+      </CartProvider>
       <header>
         <CssBaseline />
         <AppBar position="relative">
@@ -60,7 +62,9 @@ function MainNavigation() {
             >
               Dashboard
             </Button>
+            <CartProvider>
             <HeaderCartButton onShowCart={showCartHandler}/>
+            </CartProvider>
             <Box sx={{ marginLeft: "auto", marginLeft: 2 }}>
               {!token && (
                 <CustomButton

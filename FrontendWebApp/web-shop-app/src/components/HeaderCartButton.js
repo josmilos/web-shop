@@ -2,7 +2,8 @@ import { Button, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { styled } from "@mui/material/styles";
 import { extractTokenData } from "../service/UserService/AuthService";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+import CartContext from "../store/cart-context";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   cursor: "pointer",
@@ -57,6 +58,8 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 const HeaderCartButton = (props) => {
+  const cartCtx =useContext(CartContext);
+  const numberOfItems = cartCtx.products.reduce((curNumber, product) => {return curNumber + product.quantity}, 0);
   const auth = extractTokenData();
   let userType = "";
   if (auth) {
@@ -74,7 +77,7 @@ const HeaderCartButton = (props) => {
             variant="body1"
             style={{ color: "white" }}
           >
-            3
+            {numberOfItems}
           </Typography>
         </CustomButton>
       )}

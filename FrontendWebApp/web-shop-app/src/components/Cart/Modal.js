@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const Backdrop = (props) => {
+  console.log(props)
   return (
     <div
       style={{
