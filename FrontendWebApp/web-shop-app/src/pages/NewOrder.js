@@ -10,38 +10,12 @@ const content = {
   description:
     "Create a new order by selecting one or more items that are listed below.",
 };
-/*
-const products = [
-    {
-        id: "p1",
-        name: 'Product1',
-        description: 'Description of product one',
-        price: '$22.99',
-        quantity: 5
-    },
-    {
-        id: "p2",
-        name: 'Product2',
-        description: 'Description of product two',
-        price: '$12.99',
-        quantity: 2
-    },
-    {
-        id: "p3",
-        name: 'Product3',
-        description: 'Description of product three',
-        price: '$99.99',
-        quantity: 3
-    }
-]
-*/
+
 const NewOrderPage = () => {
   return (
     <Fragment>
       <PageContent content={content} />
-      <CartProvider>
         <ProductsList />
-      </CartProvider>
     </Fragment>
   );
 };
@@ -64,7 +38,6 @@ export async function loader({ request, params }) {
     );
   } else {
     const resData = await response.json();
-    console.log(resData);
     return resData;
   }
 }

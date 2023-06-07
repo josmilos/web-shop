@@ -25,12 +25,10 @@ const RootLayout = () => {
 
   return (
       <Fragment>
-        <CartProvider>
         <MainNavigation />
         <main>
           <Outlet />
         </main>
-        </CartProvider>
       </Fragment>
   );
 };

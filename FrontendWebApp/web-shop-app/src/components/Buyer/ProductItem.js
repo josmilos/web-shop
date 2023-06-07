@@ -12,7 +12,6 @@ import CartContext from "../../store/cart-context";
 const ProductItem = ({product}) => {
   const cartCtx = useContext(CartContext);
   const addToCartHandler = () => {
-    console.log('OVDE SAM')
     cartCtx.addProduct({
       productId: product.productId,
       name: product.name,
@@ -40,7 +39,6 @@ const ProductItem = ({product}) => {
                   <Typography>{product.description}</Typography>
                   <Typography>Price: {product.price}</Typography>
                   <Typography>Available: {product.quantity}</Typography>
-                  <button onClick={addToCartHandler}>Add to Cart</button>
                   <Button onClick={()=> addToCartHandler()}>Add to Cart</Button>
                 </StyledCardContent>
               </StyledCard>

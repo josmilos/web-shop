@@ -21,27 +21,24 @@ namespace WebShopAPI.Services
 
         public OrderDto AddOrder(OrderDto newOrder)
         {
+            Console.WriteLine(newOrder);
             Order order = _mapper.Map<Order>(newOrder);
-            List<int> productsId = newOrder.Products;
+            List<ProductDto> products = newOrder.Products;
             List<Product> dbProducts = _dbContext.Products.ToList();
- 
-                    var productsQuantity = productsId.GroupBy(item => item)
-                      .Select(item => new
-                      {
-                          Id = item.Key,
-                          Quantity = item.Count()
-                      })
-                      .OrderBy(item => item.Id)
-                      .ToList();
 
-            foreach (var productQuantity in productsQuantity)
+            foreach (ProductDto product in products)
             {
-                ProductOrder productOrder = new ProductOrder() { OrderId = order.OrderId, ProductId = productQuantity.Id, ProductQuantity = productQuantity.Quantity, Order = order };
+                ProductOrder productOrder = new ProductOrder() { OrderId = order.OrderId, ProductId = product.ProductId, ProductQuantity = product.Quantity, Order = order };
                 _dbContext.ProductOrders.Add(productOrder);
                 order.OrderProducts.Add(productOrder);
-                Product product = _dbContext.Products.Find(productQuantity.Id);
-                product.Quantity -= productQuantity.Quantity;
+                Console.Write(product.ProductId);
+                Product dbProduct = _dbContext.Products.Find(product.ProductId);
+                Console.Write(dbProduct);
+                dbProduct.Quantity = dbProduct.Quantity - product.Quantity;
             }
+
+            User buyer = _dbContext.Users.Find(order.UserBuyerId);
+            order.UserBuyer = buyer;
             
 
             _dbContext.Orders.Add(order);

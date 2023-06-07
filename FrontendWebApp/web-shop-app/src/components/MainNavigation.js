@@ -42,9 +42,7 @@ function MainNavigation() {
 
   return (
     <Fragment>
-      <CartProvider>
       {CartIsShown && <Cart onClose={hideCartHandler}/>}
-      </CartProvider>
       <header>
         <CssBaseline />
         <AppBar position="relative">
@@ -62,9 +60,7 @@ function MainNavigation() {
             >
               Dashboard
             </Button>
-            <CartProvider>
             <HeaderCartButton onShowCart={showCartHandler}/>
-            </CartProvider>
             <Box sx={{ marginLeft: "auto", marginLeft: 2 }}>
               {!token && (
                 <CustomButton

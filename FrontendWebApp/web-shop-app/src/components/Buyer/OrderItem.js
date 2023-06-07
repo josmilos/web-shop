@@ -8,7 +8,9 @@ import {
   TableCell,
   TableBody,
   Paper,
+  Button,
 } from "@mui/material";
+import moment from "moment/moment";
 
 const OrderItem = ({order}) => {
 
@@ -16,26 +18,16 @@ const OrderItem = ({order}) => {
     <div>
         <TableContainer component={Paper}>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Order ID</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Delivery Time</TableCell>
-                <TableCell>Total Amount</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
       {order ? (
         
             <TableBody>
                 <TableRow key={order.orderId}>
                   <TableCell>{order.orderId}</TableCell>
-                  <TableCell>{order.orderDate}</TableCell>
+                  <TableCell>{moment(order.orderDate).format('DD-MM-YYYY HH:mm:ss')}</TableCell>
                   <TableCell>{order.status}</TableCell>
-                  <TableCell>{order.deliveryTime}</TableCell>
+                  <TableCell>{moment(order.deliveryTime).format('DD-MM-YYYY HH:mm:ss')}</TableCell>
                   <TableCell>{order.totalAmount}</TableCell>
-                  <TableCell>Action</TableCell>
+                  <TableCell><Button variant="contained">Cancel</Button></TableCell>
                 </TableRow>
             </TableBody>
           

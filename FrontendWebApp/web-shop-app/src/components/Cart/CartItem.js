@@ -5,7 +5,7 @@ const CartItemWrapper = styled('li')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  borderBottom: '2px solid #8a2b06',
+  borderBottom: '2px solid #16273E',
   padding: '1rem 0',
   margin: '1rem 0',
 });
@@ -29,7 +29,7 @@ const SummaryWrapper = styled('div')({
 
 const ItemPrice = styled('span')({
   fontWeight: 'bold',
-  color: '#8a2b06',
+  color: '#16273E',
 });
 
 const ItemAmount = styled('span')({
@@ -46,7 +46,7 @@ const ActionButtonsWrapper = styled('div')({
 });
 
 const CartItem = (props) => {
-  const price = `$${props.price.toFixed(2)}`;
+  const price = `$${Number(props.price).toFixed(2)}`;
 
   return (
     <CartItemWrapper>

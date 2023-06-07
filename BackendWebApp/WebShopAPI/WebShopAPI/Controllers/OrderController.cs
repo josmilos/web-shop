@@ -44,6 +44,7 @@ namespace WebShopAPI.Controllers
         [HttpPost]
         public IActionResult CreateOrder([FromBody] OrderDto order)
         {
+            Console.WriteLine("STIGAO");
             return Ok(_orderService.AddOrder(order));
         }
 
