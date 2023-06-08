@@ -29,16 +29,28 @@ namespace WebShopAPI.Controllers
             return Ok(_orderService.GetById(id));
         }
 
-        [HttpGet("seller-pending/{id}")]
+        [HttpGet("new-seller/{id}")]
         public IActionResult GetSellerPendingOrders(int id)
         {
-            return Ok(_orderService.GetSellerPendingOrders(id));
+            return Ok(_orderService.GetSellerNewOrders(id));
         }
 
-        [HttpGet("seller-delivered/{id}")]
+        [HttpGet("history-seller/{id}")]
         public IActionResult GetSellerDeliveredOrders(int id)
         {
-            return Ok(_orderService.GetSellerDeliveredOrders(id));
+            return Ok(_orderService.GetSellerHistoryOrders(id));
+        }
+
+        [HttpGet("history-buyer/{id}")]
+        public IActionResult GetBuyerOrders(int id)
+        {
+            return Ok(_orderService.GetBuyerOrders(id));
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult EditOrder(int id, [FromBody] OrderEditDto order)
+        {
+            return Ok(_orderService.EditStatusOrder(id, order));
         }
 
         [HttpPost]

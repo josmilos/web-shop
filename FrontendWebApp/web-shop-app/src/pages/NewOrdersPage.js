@@ -5,13 +5,13 @@ import {
   getAuthToken,
 } from "../service/UserService/AuthService";
 import { json } from "react-router-dom";
-import OrdersBuyerList from "../components/Buyer/OrdersBuyerList";
 import OrdersSellerList from "../components/Seller/OrdersSellerList";
 
 const content = {
-  title: "Order History",
-  description: "Check your past orders.",
+  title: "New Orders",
+  description: "Check newly created orders.",
 };
+
 const auth = extractTokenData();
 let userType = "";
 let userId = "";
@@ -20,31 +20,20 @@ if (auth) {
   userId = auth["userId"];
 }
 
-let query = "";
-
-if (userType === "buyer") {
-  query = "buyer";
-} else if (userType === "seller") {
-  query = "seller";
-}
-
-const OrderHistoryPage = () => {
+const NewOrdersPage = () => {
   return (
     <Fragment>
       <PageContent content={content} />
-      {
-      userType === "buyer" && (<OrdersBuyerList />) }
-       {userType === "seller" && (<OrdersSellerList time={"past"}/>)
-}
+      <OrdersSellerList time={"new"}/>
     </Fragment>
   );
 };
 
-export default OrderHistoryPage;
+export default NewOrdersPage;
 
 export async function loader({ request, params }) {
   const response = await fetch(
-    "https://localhost:7108/api/orders/history-" + `${query}/${userId}`,
+    "https://localhost:7108/api/orders/history-seller" + `/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,

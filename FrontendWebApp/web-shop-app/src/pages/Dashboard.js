@@ -59,6 +59,13 @@ const cards = [
     priv: ["buyer"],
   },
   {
+    id: "new-orders",
+    image: "",
+    title: "New Orders",
+    icon: "PendingActions",
+    priv: ["seller"],
+  },
+  {
     id: "order-history",
     image: "",
     title: "Order History",
@@ -68,17 +75,11 @@ const cards = [
   {
     id: "verification",
     image: "",
-    title: "Seller Verification",
+    title: "User Verification",
     icon: "VerifiedUser",
     priv: ["admin"],
   },
-  {
-    id: "pending-orders",
-    image: "",
-    title: "Pending Orders",
-    icon: "PendingActions",
-    priv: ["seller"],
-  },
+  
   {
     id: "all-orders",
     image: "",
@@ -100,6 +101,12 @@ const contentNonVerified = {
     "Your account is not verified yet. Please wait for admin to approve your registration.",
 };
 
+const contentDenied = {
+  title: "Verification Rejected",
+  description:
+    "Your account registration has been rejected. Try creating a new one.",
+};
+
 const DashboardPage = () => {
   
   const token = useRouteLoaderData("root");
@@ -113,7 +120,9 @@ const DashboardPage = () => {
 
   return (
     <>
-      {userVerified !== "verified" ? (
+      { userVerified === "denied" ? (
+        <PageContent content={contentDenied} />
+      ): userVerified === "processing" ? (
         <PageContent content={contentNonVerified} />
       ) : (
         <>

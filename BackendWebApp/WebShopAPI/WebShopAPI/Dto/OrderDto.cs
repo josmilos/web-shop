@@ -13,6 +13,6 @@ namespace WebShopAPI.Dto
         public double TotalAmount { get; set; }
         public string Status { get; set; }
         public DateTime DeliveryTime { get; set; }
-        public List<ProductDto> Products { get; set; }
+        public List<ProductDto> Products { get; set; } = new List<ProductDto>();
     }
 }

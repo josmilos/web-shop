@@ -6,7 +6,7 @@ import { json } from "react-router-dom";
 
 const content = {
     title:'Verify New Sellers',
-    description: 'Check and approve new sellers that are waiting for verification.'
+    description: 'Check users and approve new sellers that are waiting for verification.'
   }
 
 const VerificationPage = () => {
@@ -19,7 +19,7 @@ const VerificationPage = () => {
 export default VerificationPage;
 
 export async function loader({request, params}) {
-    const response = await fetch('https://localhost:7108/api/users/unverified-sellers', {
+    const response = await fetch('https://localhost:7108/api/users/all', {
         headers: {
             "Authorization" : `Bearer ${getAuthToken()}`
         }

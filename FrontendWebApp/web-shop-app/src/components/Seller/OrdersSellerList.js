@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import OrderItem from "./OrderItem";
 import { useLoaderData } from "react-router-dom";
 import {
   Paper,
@@ -9,8 +8,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import OrderSellerItem from "./OrderSellerItem";
 
-const OrdersList = () => {
+const OrdersSellerList = (props) => {
   const orders = useLoaderData();
 
   return (
@@ -23,15 +23,14 @@ const OrdersList = () => {
             <TableCell>Status</TableCell>
             <TableCell>Delivery Time</TableCell>
             <TableCell>Total Amount</TableCell>
-            <TableCell></TableCell>
           </TableHead>
         </Table>
       </TableContainer>
       {orders.map((order) => (
-        <OrderItem order={order} key={order.orderId}></OrderItem>
+        <OrderSellerItem order={order} key={order.orderId} time = {props.time}></OrderSellerItem>
       ))}
     </Fragment>
   );
 };
 
-export default OrdersList;
+export default OrdersSellerList;

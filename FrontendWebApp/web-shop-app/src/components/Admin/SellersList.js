@@ -11,12 +11,12 @@ const SellersList = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Seller ID</TableCell>
+            <TableCell>User ID</TableCell>
             <TableCell>Username</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>First Name</TableCell>
+            <TableCell>User Type</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell></TableCell>
           </TableRow>
         </TableHead>
       </Table>

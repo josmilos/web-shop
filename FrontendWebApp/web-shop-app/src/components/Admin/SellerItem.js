@@ -56,28 +56,34 @@ const SellerItem = ({ seller }) => {
                 <TableCell>{seller.userName}</TableCell>
                 <TableCell>{seller.email}</TableCell>
                 <TableCell>{seller.firstName}</TableCell>
+                <TableCell>{seller.userType}</TableCell>
                 <TableCell>{seller.verification}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    disabled={
-                      seller.verification === "verified" ||
-                      seller.verification === "denied"
-                    }
-                    onClick={() => handleVerify()}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    variant="contained" color="error"
-                    disabled={
-                      seller.verification === "verified" ||
-                      seller.verification === "denied"
-                    }
-                    onClick={() => handleDeny()}
-                  >
-                    Deny
-                  </Button>
+                  {seller.userType === "seller" && (
+                    <>
+                      <Button
+                        variant="contained"
+                        disabled={
+                          seller.verification === "verified" ||
+                          seller.verification === "denied"
+                        }
+                        onClick={() => handleVerify()}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        disabled={
+                          seller.verification === "verified" ||
+                          seller.verification === "denied"
+                        }
+                        onClick={() => handleDeny()}
+                      >
+                        Deny
+                      </Button>
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>

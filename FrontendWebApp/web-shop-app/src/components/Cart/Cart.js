@@ -20,16 +20,18 @@ const Cart = (props) => {
 
   async function createNewOrder({ request }) {
     const { userId } = extractTokenData();
-    const date = new Date();
-    const currentTime = new Date();
+    const d = new Date();
+    const date = new Date(d.getTime() - d.getTimezoneOffset()*60000)
+    //console.log(currentTime)
+    console.log(date)
 
     // Calculate the maximum time (current time + 24 hours)
-    const maxTime = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
+    const maxTime = new Date(date.getTime() + 24 * 60 * 60 * 1000);
 
     // Generate a random time between current time and max time
     const deliveryTime = new Date(
-      currentTime.getTime() +
-        Math.random() * (maxTime.getTime() - currentTime.getTime())
+      date.getTime() +
+        Math.random() * (maxTime.getTime() - date.getTime())
     );
 
     const newOrder = {
