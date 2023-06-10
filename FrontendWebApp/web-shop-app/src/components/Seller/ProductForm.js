@@ -8,6 +8,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Form, json, Navigate, useNavigate } from "react-router-dom";
+import { UploadFileOutlined } from "@mui/icons-material";
 
 
 const defaultTheme = createTheme();
@@ -18,6 +19,16 @@ const ProductForm = () => {
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [image, setImage] = useState("");
+
+  const ImageEncode = (e) => {
+    const files = e.target.files;
+    const file = files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImage((reader.result.substring(reader.result.indexOf(',') + 1)));
+    };
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -109,12 +120,19 @@ const ProductForm = () => {
               component="label"
               variant="outlined"
               fullWidth
-              startIcon={<UploadFileIcon />}
+              startIcon={<UploadFileOutlined />}
               sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
             >
               Upload Picture
-              <input type="file" accept="image/*" id="img" name="img" hidden />
+              <input
+                type="file"
+                accept="image/*"
+                id="imag"
+                hidden
+                onChange={(e) => ImageEncode(e)}
+              />
             </Button>
+            <input type="text" value={image} name="img" id="img" readOnly hidden/>
             <Button
               type="submit"
               variant="contained"

@@ -382,7 +382,7 @@ namespace WebShopAPI.Services
             }
             if (newUserData.Password != null && newUserData.Password != string.Empty)
             {
-                user.Password = newUserData.Password;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(newUserData.Password);
             }
             if (newUserData.FirstName != null && newUserData.FirstName != string.Empty)
             {

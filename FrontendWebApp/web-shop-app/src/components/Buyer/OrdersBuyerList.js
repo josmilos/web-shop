@@ -18,11 +18,13 @@ const OrdersBuyerList = () => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
+            <TableRow>
             <TableCell>Order ID</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Delivery Time</TableCell>
             <TableCell>Total Amount</TableCell>
+            </TableRow>
           </TableHead>
         </Table>
       </TableContainer>

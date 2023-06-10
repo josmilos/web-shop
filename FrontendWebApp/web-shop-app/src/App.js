@@ -183,7 +183,7 @@ const router = createBrowserRouter([
           {
             path: "new-orders",
             element: (
-              <ProtectedRoute allowedRoles={["buyer", "seller"]}>
+              <ProtectedRoute allowedRoles={[ "seller"]}>
                 <NewOrdersPage/>
               </ProtectedRoute>
             ),

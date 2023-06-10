@@ -36,7 +36,7 @@ const ProfileOverview = () => {
     lastName: user.lastName,
     address: user.address,
     dateOfBirth: user.dateOfBirth,
-    password: user.password,
+    password: "",
     userType: user.userType,
     image: user.image,
     verificationStatus: user.verification,
@@ -136,7 +136,7 @@ const ProfileOverview = () => {
                     </Grid>
             <TextField
               label="Password"
-              value={""}
+              value={formData.password}
               disabled={!isEditing}
               fullWidth
               name="password"

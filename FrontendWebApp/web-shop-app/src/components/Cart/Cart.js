@@ -11,6 +11,8 @@ import {
 import { Form, json, redirect, useNavigate  } from "react-router-dom";
 import dayjs from "dayjs";
 
+const SHIPPING_COST = 5;
+
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const [isClicked, setIsClicked] = useState(false);
@@ -40,7 +42,8 @@ const Cart = (props) => {
       address: address,
       orderDate: date.toISOString(),
       userBuyerId: userId,
-      totalAmount: cartCtx.totalAmount.toFixed(2),
+      totalAmount: (cartCtx.totalAmount + SHIPPING_COST * cartCtx.sellers.length).toFixed(2),
+      sellerCount : cartCtx.sellers.length,
       status: "active",
       deliveryTime: deliveryTime.toISOString(),
       products: cartCtx.products,
@@ -114,8 +117,12 @@ const Cart = (props) => {
           margin: "1rem 0",
         }}
       >
-        <span>Total Amount</span>
-        <span>{totalAmount}</span>
+        <span>Shipping Cost</span>
+        <span>{`$${cartCtx.sellers.length * SHIPPING_COST}`}</span>
+        <span>Amount</span>
+        <span>{`${totalAmount}`}</span>
+        <br/><span>Total Amount</span>
+        <span>{`$${(cartCtx.totalAmount + SHIPPING_COST * cartCtx.sellers.length).toFixed(2)}`}</span>
       </div>
 
       <div

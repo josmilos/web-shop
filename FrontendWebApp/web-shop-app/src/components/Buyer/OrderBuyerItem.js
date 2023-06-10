@@ -11,25 +11,22 @@ import {
   Button,
 } from "@mui/material";
 import moment from "moment/moment";
-import { Navigate, json,  useNavigate } from "react-router-dom";
+import { Navigate, json, useNavigate } from "react-router-dom";
 import { getAuthToken } from "../../service/UserService/AuthService";
 
-
 const lessThanOneHourAgo = (date) => {
-  return moment(date).isAfter(moment().subtract(1, 'hours'));
-}
+  return moment(date).isAfter(moment().subtract(1, "hours"));
+};
 
-const OrderBuyerItem = ({order}) => {
+const OrderBuyerItem = ({ order }) => {
   const navigate = useNavigate();
   const onCancelHandler = () => {
-  
-    if(lessThanOneHourAgo(order.orderDate) && order.status === 'active'){
+    if (lessThanOneHourAgo(order.orderDate) && order.status === "active") {
       cancelOrder(order);
-    }
-    else{
+    } else {
       console.log("PROSLO 1 SAT");
     }
-  }
+  };
 
   const onDetailsHandler = () => {
     // prosledi ovde ovaj order
@@ -39,27 +36,43 @@ const OrderBuyerItem = ({order}) => {
 
   return (
     <div>
-        <TableContainer component={Paper}>
-          <Table>
-      {order && order.status !== 'cancelled' ? (
-        
+      <TableContainer component={Paper}>
+        <Table>
+          {order && order.status === "active" && (
             <TableBody>
-                <TableRow key={order.orderId}>
-                  <TableCell>{order.orderId}</TableCell>
-                  <TableCell>{moment(order.orderDate).format('DD-MM-YYYY HH:mm:ss')}</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>{moment(order.deliveryTime).format('DD-MM-YYYY HH:mm:ss')}</TableCell>
-                  <TableCell>{order.totalAmount}</TableCell>
-                  <TableCell><Button variant="contained" onClick={onDetailsHandler}>Details</Button></TableCell>
-                  <TableCell><Button variant="contained" color="error" onClick={onCancelHandler} disabled={order.status === 'cancelled' || !lessThanOneHourAgo(order.orderDate)}>Cancel</Button></TableCell>
-                </TableRow>
+              <TableRow key={order.orderId}>
+                <TableCell>{order.orderId}</TableCell>
+                <TableCell>
+                  {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
+                </TableCell>
+                <TableCell>{order.status}</TableCell>
+                <TableCell>
+                  {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
+                </TableCell>
+                <TableCell>{order.totalAmount}</TableCell>
+                <TableCell>
+                  <Button variant="contained" onClick={onDetailsHandler}>
+                    Details
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={onCancelHandler}
+                    disabled={
+                      order.status === "cancelled" ||
+                      !lessThanOneHourAgo(order.orderDate)
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </TableCell>
+              </TableRow>
             </TableBody>
-          
-      ) : (
-        ""
-      )}
-      </Table>
-        </TableContainer>
+          )}
+        </Table>
+      </TableContainer>
     </div>
   );
 };
@@ -67,11 +80,10 @@ const OrderBuyerItem = ({order}) => {
 export default OrderBuyerItem;
 
 export async function cancelOrder(props) {
-  
-  console.log("usao")
+  console.log("usao");
   const data = {
     orderId: 0,
-    status: "cancelled"
+    status: "cancelled",
   };
 
   const response = await fetch(
@@ -80,7 +92,7 @@ export async function cancelOrder(props) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${getAuthToken()}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
       body: JSON.stringify(data),
     }
@@ -100,4 +112,3 @@ export async function cancelOrder(props) {
 
   window.location.reload();
 }
-

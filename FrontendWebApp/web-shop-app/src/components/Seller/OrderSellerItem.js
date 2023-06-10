@@ -22,7 +22,7 @@ const OrderSellerItem = ({ order, time }) => {
 
   const onDetailsHandler = () => {
     // prosledi ovde ovaj order
-    
+
     navigate(`/dashboard/order-history/${order.orderId}`, { state: { order } });
   };
   const show = () => {
@@ -37,7 +37,7 @@ const OrderSellerItem = ({ order, time }) => {
     <div>
       <TableContainer component={Paper}>
         <Table>
-          {order && show() ? (
+          {order && show() && (
             <TableBody>
               <TableRow key={order.orderId}>
                 <TableCell>{order.orderId}</TableCell>
@@ -57,8 +57,6 @@ const OrderSellerItem = ({ order, time }) => {
                 </TableCell>
               </TableRow>
             </TableBody>
-          ) : (
-            ""
           )}
         </Table>
       </TableContainer>
