@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
@@ -250,7 +251,7 @@ namespace WebShopAPI.Services
                 response["statusCode"] = "400";
                 response["message"] += "\nUser type must not be empty.";
             }
-            if(user.UserType != "buyer" && user.UserType != "seller")
+            if(user.UserType != "buyer" && user.UserType != "seller" && user.UserType != string.Empty)
             {
                 Console.WriteLine("---------------POGRESAN TIP------------");
                 response["statusCode"] = "400";
@@ -268,6 +269,11 @@ namespace WebShopAPI.Services
             }
             #endregion ImageValidation
 
+
+            if (response["statusCode"] != "200")
+            {
+                return response;
+            }
 
             #region RegisteringUserInDataBase
             Console.WriteLine("UPISAN");

@@ -30,6 +30,9 @@ const SignUpForm = () => {
 
   const [date, setDate] = useState("");
   const [image, setImage] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState(true);
 
   const ImageEncode = (e) => {
     const files = e.target.files;
@@ -39,6 +42,18 @@ const SignUpForm = () => {
     reader.onload = () => {
       setImage(reader.result.substring(reader.result.indexOf(",") + 1));
     };
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setPasswordMatch(value === passwordConfirm);
+  };
+
+  const handlePasswordConfirmChange = (e) => {
+    const value = e.target.value;
+    setPasswordConfirm(value);
+    setPasswordMatch(value === password);
   };
 
   return (
@@ -105,6 +120,7 @@ const SignUpForm = () => {
                 <Grid item xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <input
+                    required
                       type="date"
                       name="date"
                       value={date}
@@ -129,6 +145,8 @@ const SignUpForm = () => {
                     label="Password"
                     type="password"
                     id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -139,10 +157,15 @@ const SignUpForm = () => {
                     label="Repeat Password"
                     type="password"
                     id="password-confirm"
+                    value={passwordConfirm}
+                    onChange={handlePasswordConfirmChange}
+                    error={!passwordMatch}
+                    helperText={!passwordMatch && "Passwords do not match"}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <Autocomplete
+                  required
                     disablePortal
                     id="combo-box-demo"
                     options={userType}
@@ -197,7 +220,7 @@ const SignUpForm = () => {
                 console.log("Login Failed");
               }}
             />
-            
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="log-in" variant="body2">
