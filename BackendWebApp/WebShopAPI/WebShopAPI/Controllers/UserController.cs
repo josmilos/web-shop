@@ -60,7 +60,8 @@ namespace WebShopAPI.Controllers
             return Ok(_userService.AddUser(user));
         }
 
-        [HttpPut("{id}")]
+
+        [HttpPatch("edit/{id}")]
         public IActionResult ChangeUser(int id, [FromBody] UserDto user)
         {
             return Ok(_userService.UpdateUser(id, user));

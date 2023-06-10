@@ -15,8 +15,8 @@ import OrderHistoryPage from "./pages/OrderHistory";
 import VerificationPage, {
   loader as verificationLoader,
 } from "./pages/Verification";
-import AllOrdersPage from "./pages/AllOrders";
-import { loader as profileLoader } from "./pages/Profile";
+import AllOrdersPage, {loader as allOrdersLoader} from "./pages/AllOrders";
+import { loader as profileLoader, action as actionProfileUpdate } from "./pages/Profile";
 import { loader as productsLoader } from "./pages/NewOrder";
 import { loader as ordersLoader } from "./pages/OrderHistory";
 import { action as actionRegister } from "./pages/SignUp";
@@ -90,6 +90,7 @@ const router = createBrowserRouter([
               </ProtectedRoute>
             ),
             loader: profileLoader,
+            action: actionProfileUpdate
           },
           {
             path: "my-products",
@@ -163,7 +164,7 @@ const router = createBrowserRouter([
               {
                 path: ":orderId",
                 element: (
-                  <ProtectedRoute allowedRoles={["buyer", "seller"]}>
+                  <ProtectedRoute allowedRoles={["buyer", "seller", "admin"]}>
                     <OrderBuyerDetail/>
                   </ProtectedRoute>
                 ),
@@ -195,7 +196,7 @@ const router = createBrowserRouter([
                 <AllOrdersPage />
               </ProtectedRoute>
             ),
-            loader: () => {},
+            loader: allOrdersLoader,
           },
         ],
       },

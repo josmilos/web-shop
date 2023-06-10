@@ -1,8 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using WebShopAPI.Infrastructure;
 using WebShopAPI.Interfaces;
@@ -77,7 +80,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+var smtpClient = new SmtpClient(builder.Configuration["Smtp:Host"])
+{
+    Port = int.Parse(builder.Configuration["Smtp:Port"]),
+    Credentials = new NetworkCredential(builder.Configuration["Smtp:Username"], builder.Configuration["Smtp:Password"]),
+    EnableSsl = true,
+};
 
+
+
+builder.Services.AddSingleton(smtpClient);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -101,6 +113,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebShop v1"));
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseCors(_cors);

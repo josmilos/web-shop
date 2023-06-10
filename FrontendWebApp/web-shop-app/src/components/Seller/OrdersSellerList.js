@@ -20,6 +20,7 @@ const OrdersSellerList = (props) => {
           <TableHead>
             <TableCell>Order ID</TableCell>
             <TableCell>Date</TableCell>
+            <TableCell>Buyer ID</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Delivery Time</TableCell>
             <TableCell>Total Amount</TableCell>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export const ImageEncode = (props) => {
   const files = props.event.target.files;
@@ -10,27 +10,18 @@ export const ImageEncode = (props) => {
   };
 };
 
-export const ImageDecode = ({ encodedImage }) => {
-  const [decodedImage, setDecodedImage] = useState("");
+export const decodeBase64 = (base64) => {
+  const decoded = atob(base64.split(",")[1]);
+  const length = decoded.length;
+  const arrayBuffer = new ArrayBuffer(length);
+  const uint8Array = new Uint8Array(arrayBuffer);
 
-  const decodeImage = () => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      const dataURL = canvas.toDataURL("image/jpeg");
-      setDecodedImage(dataURL);
-    };
-    img.src = encodedImage;
-  };
+  for (let i = 0; i < length; i++) {
+    uint8Array[i] = decoded.charCodeAt(i);
+  }
 
-  return (
-    <div>
-      <button onClick={decodeImage}>Decode Image</button>
-      {decodedImage && <img src={decodedImage} alt="" />}
-    </div>
-  );
+  const blob = new Blob([uint8Array], { type: "image/jpeg" });
+  const url = URL.createObjectURL(blob);
+
+  return url;
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useParams, useSubmit } from "react-router-dom";
 import { Typography, Box, Paper, Button } from "@mui/material";
+import { DecodedImage } from "../DecodedImage";
 
 const ProductDetailsPage = ({product}) => {
   const { productId } = useParams();
@@ -15,11 +16,7 @@ const ProductDetailsPage = ({product}) => {
   return (
     <Box sx={{ padding: "2rem" }}>
       <Box display="flex" gap="2rem" alignItems="center">
-        <img
-          src={product.image}
-          alt={product.name}
-          style={{ width: "200px", height: "200px", objectFit: "cover" }}
-        />
+      <DecodedImage base64String={product.image} /> 
         <Paper elevation={3} sx={{ padding: "1rem" }}>
           <Typography variant="h6" gutterBottom>
             ID: {product.productId}

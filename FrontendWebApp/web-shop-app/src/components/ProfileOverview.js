@@ -1,15 +1,31 @@
-import React, { useState } from "react";
-import { useLoaderData } from "react-router-dom";
-import { Box, TextField, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Form, useLoaderData } from "react-router-dom";
+import { Box, TextField, Button, Typography, Grid } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
+import { ImageEncode } from "../service/ImageConverter";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DecodedImage } from "./DecodedImage";
 
 const defaultTheme = createTheme();
 
 const ProfileOverview = () => {
   const user = useLoaderData();
+  const [image, setImage] = useState(user.image);
+  const [date, setDate] = useState(user.dateOfBirth);
+
+  const ImageEncode = (e) => {
+    const files = e.target.files;
+    const file = files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImage((reader.result.substring(reader.result.indexOf(',') + 1)));
+    };
+  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,6 +41,7 @@ const ProfileOverview = () => {
     image: user.image,
     verificationStatus: user.verification,
   });
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -54,7 +71,6 @@ const ProfileOverview = () => {
           }}
         >
           <Box
-            component="form"
             noValidate
             sx={{
               width: "100%",
@@ -63,6 +79,8 @@ const ProfileOverview = () => {
               gap: "1rem",
             }}
           >
+           <DecodedImage base64String={user.image} /> 
+            <Form method="patch">
             <TextField
               label="User ID"
               value={formData.userId}
@@ -105,14 +123,17 @@ const ProfileOverview = () => {
               name="address"
               onChange={handleChange}
             />
-            <TextField
-              label="Date of Birth"
-              value={formData.dateOfBirth}
-              disabled={!isEditing}
-              fullWidth
-              name="dateOfBirth"
-              onChange={handleChange}
-            />
+            <Grid item xs={12}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <input
+                          type="date"
+                          name="date"
+                          disabled={!isEditing}
+                          value={date.slice(0, 10)}
+                          onChange={(e) => setDate(e.target.value)}
+                        ></input>
+                      </LocalizationProvider>
+                    </Grid>
             <TextField
               label="Password"
               value={""}
@@ -137,30 +158,40 @@ const ProfileOverview = () => {
 
             {isEditing ? (
               <>
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<UploadFileIcon />}
-                  fullWidth
-                >
-                  Upload Picture
-                  <input
-                    type="file"
-                    accept="image/*"
-                    id="img"
-                    name="img"
-                    hidden
-                  />
-                </Button>
-                <Button variant="contained" onClick={handleSave} fullWidth>
+                <Grid item xs={12}>
+                      
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="imag"
+                        style={{ display: "none" }}
+                        onChange={(e) => ImageEncode(e)}
+                      />
+                      <label htmlFor="imag">
+                        <Button
+                          component="span"
+                          variant="outlined"
+                          startIcon={<UploadFileIcon />}
+                          sx={{ marginRight: "2rem" }}
+                        >
+                          Upload Picture
+                        </Button>
+                      </label>
+                       
+                    </Grid>
+                <Button variant="contained" type="submit" fullWidth>
                   Save
                 </Button>
+                
               </>
+              
             ) : (
               <Button variant="contained" onClick={handleEdit} fullWidth>
                 Edit
               </Button>
             )}
+            <input type="text" value={image} name="img" id="img" readOnly hidden/>
+            </Form>
           </Box>
         </Box>
       </Container>

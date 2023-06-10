@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Grid } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { extractTokenData } from "../../service/UserService/AuthService";
+import { DecodedImage } from "../DecodedImage";
 
 const OrderBuyerDetail = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const OrderBuyerDetail = () => {
         <Typography>
           Order Date: {new Date(order.orderDate).toLocaleString()}
         </Typography>
-        {userType === "seller" && (
+        {userType === "seller" || userType === "admin" && (
           <Typography>Buyer ID: {order.userBuyerId}</Typography>
         )}
 
@@ -35,14 +36,15 @@ const OrderBuyerDetail = () => {
         {order.products.map((product) => (
           <div key={product.productId}>
             <Typography>Product ID: {product.productId}</Typography>
+            {userType === "buyer" || userType === "admin" && (
+              <Typography>Seller ID: {product.sellerId}</Typography>
+            )}
             <Typography>Name: {product.name}</Typography>
             <Typography>Description: {product.description}</Typography>
             <Typography>Price: {product.price}</Typography>
             <Typography>Quantity: {product.quantity}</Typography>
-            <Typography>Image: {product.image}</Typography>
-            {userType === "buyer" && (
-              <Typography>Seller ID: {product.sellerId}</Typography>
-            )}
+            <DecodedImage base64String={product.image} /> 
+            
           </div>
         ))}
       </Grid>

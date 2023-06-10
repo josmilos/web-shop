@@ -3,10 +3,7 @@ import { alignProperty } from "@mui/material/styles/cssUtils";
 import { json, redirect, useActionData } from "react-router-dom";
 import SignUpForm from "../components/SignUpForm";
 import { extractTokenData, storeAuthToken } from "../service/UserService/AuthService";
-
-
-
-//const today = dayjs(new Date.date)
+import { encodeImageToBase64 } from "../service/ImageConverter";
 
 
 const SignUp = () => {
@@ -29,7 +26,7 @@ export async function action({ request}) {
     firstName: data.get("firstName"),
     lastName: data.get("lastName"),
     address: data.get("address"),
-    dateOfBirth: data.get("date"),
+    dateOfBirth: data.get("date").slice(0, 10),
     userType: data.get("type").toLocaleLowerCase(),
     image: data.get("img"),
     verification: "",

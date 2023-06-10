@@ -3,6 +3,7 @@ using BCrypt.Net;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,15 +17,18 @@ namespace WebShopAPI.Services
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly IConfigurationSection _secretKey;
+        private readonly IConfigurationSection _secretKey, _senderEmail;
         private readonly WebShopDbContext _dbContext;
+        private readonly SmtpClient _smtpClient;
 
 
-        public UserService(IMapper mapper, IConfiguration config, WebShopDbContext dbContext)
+        public UserService(IMapper mapper, IConfiguration config, WebShopDbContext dbContext, SmtpClient smtpClient)
         {
             _mapper = mapper;
             _dbContext = dbContext;
             _secretKey = config.GetSection("SecretKey");
+            _senderEmail = config.GetSection("Smtp:Username");
+            _smtpClient = smtpClient;
         }
 
         public Dictionary<string, string> Login(UserCredentialsDto credentialsDto)
@@ -362,16 +366,45 @@ namespace WebShopAPI.Services
         public UserDto UpdateUser(int id, UserDto newUserData)
         {
             User user = _dbContext.Users.Find(id);
-            user.UserName = newUserData.UserName;
-            user.Email = newUserData.Email;
-            user.Password = newUserData.Password;
-            user.FirstName = newUserData.FirstName;
-            user.LastName = newUserData.LastName;
-            user.DateOfBirth = newUserData.DateOfBirth;
-            user.Image = newUserData.Image;
-            user.Verification = newUserData.Verification;
+            if(user == null)
+            {
+                Console.WriteLine("NEMA TOG KORISNIKA");
+                // napravi poruku o gresci na serveru
+                throw new NotImplementedException();
+            }
+            if(newUserData.UserName != null && newUserData.UserName != string.Empty)
+            {
+                user.UserName = newUserData.UserName;
+            }
+            if (newUserData.Email != null && newUserData.Email != string.Empty)
+            {
+                user.Email = newUserData.Email;
+            }
+            if (newUserData.Password != null && newUserData.Password != string.Empty)
+            {
+                user.Password = newUserData.Password;
+            }
+            if (newUserData.FirstName != null && newUserData.FirstName != string.Empty)
+            {
+                user.FirstName = newUserData.FirstName;
+            }
+            if (newUserData.LastName != null && newUserData.LastName != string.Empty)
+            {
+                user.LastName = newUserData.LastName;
+            }
+            if (newUserData.DateOfBirth != null && newUserData.DateOfBirth != DateTime.Today)
+            {
+                user.DateOfBirth = newUserData.DateOfBirth;
+            }
+            if (newUserData.Image != null && newUserData.Image != string.Empty)
+            {
+                
+                user.Image = newUserData.Image;
+            }
+            
             _dbContext.SaveChanges();
 
+            Console.WriteLine("ZAVRSENE IZMENE");
             return _mapper.Map<UserDto>(user);
         }
 
@@ -395,6 +428,15 @@ namespace WebShopAPI.Services
             User user = _dbContext.Users.Find(id);
             if(option == "approve")
             {
+                var mailMessage = new MailMessage
+                {
+                    Subject = "Account Verification",
+                    Body = "<h1>Your account has been verified.</h1>",
+                    IsBodyHtml = true,
+                };
+                mailMessage.From = new MailAddress(_senderEmail.Value);
+                mailMessage.To.Add(user.Email);
+                _smtpClient.Send(mailMessage);
                 user.Verification = "verified";
             }
             else if(option == "deny")

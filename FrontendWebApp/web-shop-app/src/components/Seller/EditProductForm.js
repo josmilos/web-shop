@@ -3,6 +3,7 @@ import { UploadFileOutlined } from "@mui/icons-material";
 import { Box, Button, TextField, createTheme } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-router-dom";
+import { DecodedImage } from "../DecodedImage";
 
 const defaultTheme = createTheme();
 
@@ -13,6 +14,16 @@ const EditProductForm = ({ product }) => {
   const [price, setPrice] = useState(product.price);
   const [quantity, setQuantity] = useState(product.quantity);
   const [image, setImage] = useState(product.image);
+
+  const ImageEncode = (e) => {
+    const files = e.target.files;
+    const file = files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImage((reader.result.substring(reader.result.indexOf(',') + 1)));
+    };
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -34,11 +45,7 @@ const EditProductForm = ({ product }) => {
             gap: "1rem",
           }}
         >
-          <img
-            src={image}
-            alt={name}
-            style={{ width: "200px", height: "200px", objectFit: "cover" }}
-          />
+          <DecodedImage base64String={image} /> 
           <Form method="patch">
             <TextField
               label="Product ID"
@@ -104,12 +111,12 @@ const EditProductForm = ({ product }) => {
               <input
                 type="file"
                 accept="image/*"
-                id="img"
-                name="img"
+                id="imag"
                 hidden
-                onChange={(e) => setImage(e.target.value)}
+                onChange={(e) => ImageEncode(e)}
               />
             </Button>
+            <input type="text" value={image} name="img" id="img" readOnly hidden/>
             <Button
               type="submit"
               variant="contained"

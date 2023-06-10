@@ -44,6 +44,7 @@ const OrderSellerItem = ({ order, time }) => {
                 <TableCell>
                   {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
                 </TableCell>
+                <TableCell>{order.userBuyerId}</TableCell>
                 <TableCell>{order.status}</TableCell>
                 <TableCell>
                   {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}

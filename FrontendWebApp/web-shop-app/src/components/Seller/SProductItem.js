@@ -8,6 +8,7 @@ import {
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ImageDecode } from "../../service/ImageConverter";
+import { DecodedImage } from "../DecodedImage";
 
 const SProductItem = ({product}) => {
   const [image, setImage] = useState("");
@@ -18,10 +19,7 @@ return (
           <Grid container spacing={4}>
             <Grid item>
               <StyledCard>
-                <StyledCardMedia
-                  image={product.image}
-                  title={product.name}
-                />
+              <DecodedImage base64String={product.image} /> 
                 <StyledCardContent>
                   <Typography gutterBottom variant="h5">
                     {product.name}

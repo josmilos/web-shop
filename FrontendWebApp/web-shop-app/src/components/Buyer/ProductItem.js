@@ -8,6 +8,7 @@ import {
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import CartContext from "../../store/cart-context";
+import { DecodedImage } from "../DecodedImage";
 
 const ProductItem = ({product}) => {
   const cartCtx = useContext(CartContext);
@@ -28,11 +29,9 @@ const ProductItem = ({product}) => {
           <Grid container spacing={4}>
             <Grid item>
               <StyledCard>
-                <StyledCardMedia
-                  image="https://source.unsplash.com/random"
-                  title="Product Title"
-                />
+              
                 <StyledCardContent>
+                <DecodedImage base64String={product.image} /> 
                   <Typography gutterBottom variant="h5">
                     {product.name}
                   </Typography>

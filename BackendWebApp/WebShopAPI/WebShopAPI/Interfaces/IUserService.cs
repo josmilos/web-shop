@@ -1,4 +1,5 @@
 ﻿using WebShopAPI.Dto;
+using WebShopAPI.Models;
 
 namespace WebShopAPI.Interfaces
 {

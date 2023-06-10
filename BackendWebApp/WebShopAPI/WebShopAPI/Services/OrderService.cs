@@ -71,7 +71,14 @@ namespace WebShopAPI.Services
 
         public List<OrderDto> GetOrders()
         {
-            return _mapper.Map<List<OrderDto>>(_dbContext.Orders.ToList());
+            List<OrderDto> returnOrders = new List<OrderDto>();
+            List<User> users = _dbContext.Users.Where(u => u.UserType == "buyer").ToList();
+
+            foreach (User user in users)
+            {
+                returnOrders.AddRange(GetBuyerOrders(user.UserId));
+            }
+            return returnOrders;
         }
 
         public List<OrderDto> GetSellerHistoryOrders(int id)
