@@ -14,7 +14,9 @@ const EditSellerProductPage = () => {
   return (
     <Fragment>
       <PageContent content={content} />
-      <EditProductForm product={data} />
+      <div style={{ display: "flex", justifyContent:'center' }}>
+        <EditProductForm product={data} />
+      </div>
     </Fragment>
   );
 };
@@ -39,7 +41,7 @@ export async function action({ request }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${getAuthToken()}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
       body: JSON.stringify(productData),
     }

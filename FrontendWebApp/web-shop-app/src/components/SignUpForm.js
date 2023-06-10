@@ -20,6 +20,7 @@ import { Form, useActionData } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const defaultTheme = createTheme();
 const minDate = dayjs(new Date(1910, 1, 1));
@@ -28,7 +29,7 @@ const userType = ["Buyer", "Seller"];
 const SignUpForm = () => {
   const data = useActionData();
 
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState();
   const [image, setImage] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -55,6 +56,8 @@ const SignUpForm = () => {
     setPasswordConfirm(value);
     setPasswordMatch(value === password);
   };
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -118,6 +121,7 @@ const SignUpForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
+
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <input
                     required
@@ -125,6 +129,13 @@ const SignUpForm = () => {
                       name="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
+                      style={{
+                        width: "100%", // Stretch the input field to match other fields
+                        boxSizing: "border-box", // Include padding and border in the width
+                        padding: "10px", // Adjust the padding as needed
+                        border: "1px solid #ccc", // Add a border if desired
+                        borderRadius: "4px", // Add border radius if desired
+                      }}
                     ></input>
                   </LocalizationProvider>
                 </Grid>
@@ -165,11 +176,15 @@ const SignUpForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <Autocomplete
-                  required
+                    required
                     disablePortal
                     id="combo-box-demo"
                     options={userType}
-                    sx={{ width: 300 }}
+                    sx={{
+                      width: "100%", // Stretch the drop-down box to match other fields
+                      display: "flex",
+                      justifyContent: "center", // Center the options horizontally
+                    }}
                     renderInput={(params) => (
                       <TextField {...params} label="User Type" name="type" />
                     )}
@@ -179,16 +194,21 @@ const SignUpForm = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    id="img"
+                    id="imag"
                     style={{ display: "none" }}
                     onChange={(e) => ImageEncode(e)}
                   />
-                  <label htmlFor="img">
+                  <label htmlFor="imag">
                     <Button
                       component="span"
                       variant="outlined"
                       startIcon={<UploadFileIcon />}
-                      sx={{ marginRight: "2rem" }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center", // Center the icon horizontally
+                        alignItems: "center", // Center the icon vertically
+                        width: "100%", // Stretch the button to match other fields
+                      }}
                     >
                       Upload Picture
                     </Button>

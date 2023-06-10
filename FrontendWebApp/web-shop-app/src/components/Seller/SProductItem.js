@@ -4,29 +4,38 @@ import {
   StyledCard,
   StyledCardMedia,
   StyledCardContent,
-} from "../ProductItemStyle";
+} from "../Buyer/ProductItemStyle";
 import { Grid, Typography, ButtonBase, Icon, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ImageDecode } from "../../service/ImageConverter";
 import { DecodedImage } from "../DecodedImage";
+import { StyledAvatar } from "../Buyer/ProductItemStyle";
 
-const SProductItem = ({product}) => {
+const SProductItem = ({ product }) => {
   const [image, setImage] = useState("");
-return (
+  return (
     <Fragment>
       <ButtonBase component={RouterLink} to={`${product.productId}`}>
         <ContainerCardGrid maxWidth="md">
           <Grid container spacing={4}>
             <Grid item>
               <StyledCard>
-              <DecodedImage base64String={product.image} /> 
                 <StyledCardContent>
-                  <Typography gutterBottom variant="h5">
-                    {product.name}
-                  </Typography>
-                  <Typography>{product.description}</Typography>
-                  <Typography>Price: {product.price}</Typography>
-                  <Typography>Available: {product.quantity}</Typography>
+                  <StyledAvatar variant="square">
+                    <DecodedImage base64String={product.image} />
+                  </StyledAvatar>
+                  <div style={{ textAlign: "center" }}>
+                    <Typography
+                      ggutterBottom
+                      variant="h5"
+                      style={{ fontWeight: "bold", marginBottom: "0.5rem" }}
+                    >
+                      {product.name}
+                    </Typography>
+                    <Typography style={{ marginBottom: "0.5rem" }}>{product.description}</Typography>
+                    <Typography style={{ marginBottom: "0.5rem" }}>Price: ${product.price}</Typography>
+                    <Typography style={{ marginBottom: "0.5rem" }}>Available: {product.quantity}</Typography>
+                  </div>
                 </StyledCardContent>
               </StyledCard>
             </Grid>
@@ -34,7 +43,7 @@ return (
         </ContainerCardGrid>
       </ButtonBase>
     </Fragment>
-)
-}
+  );
+};
 
 export default SProductItem;

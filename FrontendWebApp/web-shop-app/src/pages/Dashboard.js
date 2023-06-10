@@ -8,6 +8,7 @@ import {
   StyledCard,
   StyledCardMedia,
   StyledCardContent,
+  StyledIcon,
 } from "./styles/DashBoardStyle";
 import { Grid, Typography, ButtonBase, Icon } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -79,7 +80,7 @@ const cards = [
     icon: "VerifiedUser",
     priv: ["admin"],
   },
-  
+
   {
     id: "all-orders",
     image: "",
@@ -108,7 +109,6 @@ const contentDenied = {
 };
 
 const DashboardPage = () => {
-  
   const token = useRouteLoaderData("root");
   let userRole = "";
   let userVerified = "";
@@ -120,35 +120,36 @@ const DashboardPage = () => {
 
   return (
     <>
-      { userVerified === "denied" ? (
+      {userVerified === "denied" ? (
         <PageContent content={contentDenied} />
-      ): userVerified === "processing" ? (
+      ) : userVerified === "processing" ? (
         <PageContent content={contentNonVerified} />
       ) : (
         <>
           <PageContent content={contentVerified} />
-          {cards.map((page) => {
-            return userRole && page?.priv?.find((r) => userRole?.includes(r)) ? (
-              <ButtonBase component={RouterLink} to={page.id} key={page.id}>
-                <ContainerCardGrid maxWidth="md">
-                  <Grid container spacing={4}>
-                    <Grid item>
-                      <StyledCard sx={{ alignContent: "center" }}>
+          <ContainerCardGrid maxWidth="md">
+            <Grid container spacing={4} sx={{ justifyContent: "center" }}>
+              {cards.map((page) => {
+                return userRole &&
+                  page?.priv?.find((r) => userRole?.includes(r)) ? (
+                  <Grid item key={page.id}>
+                    <ButtonBase component={RouterLink} to={page.id}>
+                      <StyledCard>
+                        <span style={{ display: "flex", justifyContent: "center" }}>
                         {icons[page.icon]}
+                        </span>
                         <StyledCardContent>
                           <Typography gutterBottom variant="h5">
                             {page.title}
                           </Typography>
                         </StyledCardContent>
                       </StyledCard>
-                    </Grid>
+                    </ButtonBase>
                   </Grid>
-                </ContainerCardGrid>
-              </ButtonBase>
-            ) : (
-              ""
-            );
-          })}
+                ) : null;
+              })}
+            </Grid>
+          </ContainerCardGrid>
         </>
       )}
       {!token && (
@@ -164,6 +165,5 @@ const DashboardPage = () => {
     </>
   );
 };
-
 
 export default DashboardPage;

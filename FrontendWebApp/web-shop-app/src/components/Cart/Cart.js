@@ -8,7 +8,7 @@ import {
   extractTokenData,
   getAuthToken,
 } from "../../service/UserService/AuthService";
-import { Form, json, redirect, useNavigate  } from "react-router-dom";
+import { Form, json, redirect, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 const SHIPPING_COST = 5;
@@ -23,17 +23,16 @@ const Cart = (props) => {
   async function createNewOrder({ request }) {
     const { userId } = extractTokenData();
     const d = new Date();
-    const date = new Date(d.getTime() - d.getTimezoneOffset()*60000)
+    const date = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
     //console.log(currentTime)
-    console.log(date)
+    console.log(date);
 
     // Calculate the maximum time (current time + 24 hours)
     const maxTime = new Date(date.getTime() + 24 * 60 * 60 * 1000);
 
     // Generate a random time between current time and max time
     const deliveryTime = new Date(
-      date.getTime() +
-        Math.random() * (maxTime.getTime() - date.getTime())
+      date.getTime() + Math.random() * (maxTime.getTime() - date.getTime())
     );
 
     const newOrder = {
@@ -42,8 +41,11 @@ const Cart = (props) => {
       address: address,
       orderDate: date.toISOString(),
       userBuyerId: userId,
-      totalAmount: (cartCtx.totalAmount + SHIPPING_COST * cartCtx.sellers.length).toFixed(2),
-      sellerCount : cartCtx.sellers.length,
+      totalAmount: (
+        cartCtx.totalAmount +
+        SHIPPING_COST * cartCtx.sellers.length
+      ).toFixed(2),
+      sellerCount: cartCtx.sellers.length,
       status: "active",
       deliveryTime: deliveryTime.toISOString(),
       products: cartCtx.products,
@@ -109,43 +111,51 @@ const Cart = (props) => {
       {cartItems}
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          textAlign: "right",
           fontWeight: "bold",
           fontSize: "1.5rem",
           margin: "1rem 0",
         }}
       >
-        <span>Shipping Cost</span>
-        <span>{`$${cartCtx.sellers.length * SHIPPING_COST}`}</span>
-        <span>Amount</span>
-        <span>{`${totalAmount}`}</span>
-        <br/><span>Total Amount</span>
-        <span>{`$${(cartCtx.totalAmount + SHIPPING_COST * cartCtx.sellers.length).toFixed(2)}`}</span>
+        <div>
+          <span style={{ marginRight: "15px" }}>Amount:</span>
+          <span>{`${totalAmount}`}</span>
+        </div>
+        <div>
+          <span style={{ marginRight: "15px" }}>Shipping Cost:</span>
+          <span>{`$${cartCtx.sellers.length * SHIPPING_COST}`}</span>
+        </div>
+        <div>
+          <span style={{ marginRight: "15px" }}>Total Amount:</span>
+          <span>{`$${(
+            cartCtx.totalAmount +
+            SHIPPING_COST * cartCtx.sellers.length
+          ).toFixed(2)}`}</span>
+        </div>
       </div>
-
-      <div
-        style={{
-          textAlign: "right",
-        }}
-      >
-        <Button
-          variant="outlined"
+      {hasItems && !isClicked && (
+        <div
           style={{
-            cursor: "pointer",
-            backgroundColor: "transparent",
-            border: "1px solid #16273E",
-            padding: "0.35rem 2rem",
-            borderRadius: "25px",
-            marginLeft: "1rem",
-            color: "#233B58",
+            textAlign: "right",
           }}
-          onClick={props.onClose}
         >
-          Close
-        </Button>
-        {hasItems && !isClicked && (
+          <Button
+            variant="outlined"
+            style={{
+              cursor: "pointer",
+              backgroundColor: "transparent",
+              border: "1px solid #16273E",
+              padding: "0.35rem 2rem",
+              borderRadius: "25px",
+              marginLeft: "1rem",
+              marginBottom: "1rem",
+              color: "#233B58",
+            }}
+            onClick={props.onClose}
+          >
+            Close
+          </Button>
+
           <Button
             variant="contained"
             style={{
@@ -161,34 +171,40 @@ const Cart = (props) => {
           >
             Order
           </Button>
-        )}
-      </div>
-
+        </div>
+      )}
       {hasItems && isClicked && (
-        <div>
-          <div style={{ display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ marginBottom: "1rem" }}>
-                <TextField
-                  name="address"
-                  label="Address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  fullWidth
-                />
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <TextareaAutosize
-                  name="comment"
-                  placeholder="Comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  minRows={3}
-                  fullwidth="true"
-                />
-              </div>
+        <div
+          style={{
+            textAlign: "right",
+            display:'block',
+            width: '30%',
+            justifyContent:'end',
+            marginLeft: '70%'
+          }}
+        >
+          <>
+            <div style={{ marginBottom: "1rem" }}>
+              <TextField
+                name="address"
+                label="Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                fullWidth
+              />
             </div>
-          </div>
+            <div style={{ marginBottom: "1rem" }}>
+              <TextareaAutosize
+                name="comment"
+                placeholder="Comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                minRows={3}
+                style={{resize:'vertical', width: '100%'}}
+              />
+            </div>
+          </>
+
           <div
             style={{
               display: "inline",

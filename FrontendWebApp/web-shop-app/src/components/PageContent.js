@@ -29,9 +29,9 @@ const PageContent = ({ content, children }) => {
             {content.description}
           </Typography>
           <Stack
-            sx={{ pt: 4 }}
+
             direction="row"
-            spacing={2}
+            spacing={1}
             justifyContent="center"
           >
           </Stack>

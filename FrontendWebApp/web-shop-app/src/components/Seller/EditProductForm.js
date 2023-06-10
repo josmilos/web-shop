@@ -4,6 +4,7 @@ import { Box, Button, TextField, createTheme } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 import { DecodedImage } from "../DecodedImage";
+import { StyledAvatar } from "../Buyer/ProductItemStyle";
 
 const defaultTheme = createTheme();
 
@@ -39,14 +40,19 @@ const EditProductForm = ({ product }) => {
         <Box
           noValidate
           sx={{
-            mt: 3,
-            width: "100%",
+            mt: 1,
+            width: "150%",
             display: "grid",
             gap: "1rem",
           }}
         >
-          <DecodedImage base64String={image} /> 
+          <div style={{display:'flex', justifyContent: 'center'}}>
+        <StyledAvatar variant="square">
+          <DecodedImage base64String={product.image} />
+        </StyledAvatar>
+        </div> 
           <Form method="patch">
+            <div>
             <TextField
               label="Product ID"
               name="productId"
@@ -54,9 +60,10 @@ const EditProductForm = ({ product }) => {
               onChange={(e) => e.target.value = productId}
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
+              sx={{ width: "100%" }}
             />
-            <TextField
+            </div>
+            <div><TextField
               label="Name"
               name="name"
               value={name}
@@ -64,9 +71,9 @@ const EditProductForm = ({ product }) => {
               required
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
-            />
-            <TextField
+              sx={{ width: "100%" }}
+            /></div>
+            <div><TextField
               label="Description"
               value={description}
               name="description"
@@ -76,8 +83,9 @@ const EditProductForm = ({ product }) => {
               multiline
               rows={4}
               margin="normal"
-              sx={{ width: "35%" }}
-            />
+              sx={{ width: "100%" }}
+            /></div>
+            <div>
             <TextField
               label="Price"
               type="number"
@@ -87,8 +95,10 @@ const EditProductForm = ({ product }) => {
               required
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
+              sx={{ width: "100%" }}
             />
+            </div>
+            <div>
             <TextField
               label="Quantity"
               type="number"
@@ -98,14 +108,15 @@ const EditProductForm = ({ product }) => {
               required
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
+              sx={{ width: "100%" }}
             />
+            </div>
             <Button
               component="label"
               variant="outlined"
               fullWidth
               startIcon={<UploadFileOutlined />}
-              sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
+              sx={{ marginRight: "2rem", marginTop: "1rem", width: "100%" }}
             >
               Upload Picture
               <input
@@ -117,14 +128,16 @@ const EditProductForm = ({ product }) => {
               />
             </Button>
             <input type="text" value={image} name="img" id="img" readOnly hidden/>
+            <div>
             <Button
               type="submit"
               variant="contained"
               fullWidth
-              sx={{ mt: 3, mb: 2, width: "35%" }}
+              sx={{ mt: 3, mb: 2, width: "100%" }}
             >
               Save
             </Button>
+            </div>
           </Form>
         </Box>
       </Box>

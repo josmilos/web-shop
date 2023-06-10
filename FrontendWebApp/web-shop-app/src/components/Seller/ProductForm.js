@@ -9,7 +9,8 @@ import Avatar from "@mui/material/Avatar";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Form, json, Navigate, useNavigate } from "react-router-dom";
 import { UploadFileOutlined } from "@mui/icons-material";
-
+import { StyledAvatar } from "../Buyer/ProductItemStyle";
+import { DecodedImage } from "../DecodedImage";
 
 const defaultTheme = createTheme();
 
@@ -26,7 +27,7 @@ const ProductForm = () => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      setImage((reader.result.substring(reader.result.indexOf(',') + 1)));
+      setImage(reader.result.substring(reader.result.indexOf(",") + 1));
     };
   };
 
@@ -65,35 +66,48 @@ const ProductForm = () => {
         <Box
           noValidate
           sx={{
-            mt: 3,
-            width: "100%",
+            mt: 1,
+            width: "200%",
             display: "grid",
             gap: "1rem",
           }}
         >
+          {image && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <StyledAvatar variant="square">
+                <DecodedImage base64String={image} />
+              </StyledAvatar>
+            </div>
+          )}
+
           <Form method="post">
-            <TextField
-              label="Name"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              fullWidth
-              margin="normal"
-              sx={{ width: "35%" }}
-            />
-            <TextField
-              label="Description"
-              value={description}
-              name="description"
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              fullWidth
-              multiline
-              rows={4}
-              margin="normal"
-              sx={{ width: "35%" }}
-            />
+            <div>
+              <TextField
+                label="Name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ width: "100%" }}
+              />
+            </div>
+            <div>
+              <TextField
+                label="Description"
+                value={description}
+                name="description"
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                fullWidth
+                multiline
+                rows={4}
+                margin="normal"
+                sx={{ width: "100%" }}
+              />
+            </div>
+<div>
             <TextField
               label="Price"
               type="number"
@@ -103,8 +117,10 @@ const ProductForm = () => {
               required
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
+              sx={{ width: "100%" }}
             />
+            </div>
+            <div>
             <TextField
               label="Quantity"
               type="number"
@@ -114,14 +130,16 @@ const ProductForm = () => {
               required
               fullWidth
               margin="normal"
-              sx={{ width: "35%" }}
+              sx={{ width: "100%" }}
             />
+            </div>
+            <div>
             <Button
               component="label"
               variant="outlined"
               fullWidth
               startIcon={<UploadFileOutlined />}
-              sx={{ marginRight: "2rem", marginTop: "1rem", width: "35%" }}
+              sx={{ marginRight: "2rem", marginTop: "1rem", width: "100%" }}
             >
               Upload Picture
               <input
@@ -132,12 +150,20 @@ const ProductForm = () => {
                 onChange={(e) => ImageEncode(e)}
               />
             </Button>
-            <input type="text" value={image} name="img" id="img" readOnly hidden/>
+            </div>
+            <input
+              type="text"
+              value={image}
+              name="img"
+              id="img"
+              readOnly
+              hidden
+            />
             <Button
               type="submit"
               variant="contained"
               fullWidth
-              sx={{ mt: 3, mb: 2, width: "35%" }}
+              sx={{ mt: 3, mb: 2, width: "100%" }}
             >
               Add Product
             </Button>
@@ -149,5 +175,3 @@ const ProductForm = () => {
 };
 
 export default ProductForm;
-
-

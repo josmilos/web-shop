@@ -4,6 +4,7 @@ import { useLoaderData } from "react-router-dom";
 import {
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -23,11 +24,14 @@ const AOrdersList = () => {
               <TableCell>Total Amount</TableCell>
               <TableCell></TableCell>
           </TableHead>
-        </Table>
-      </TableContainer>
-      {orders.map((order) => (
+          <TableBody>
+          {orders.map((order) => (
         <AOrderItem order={order} key={order.orderId} />
       ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      
     </Fragment>
   );
 };

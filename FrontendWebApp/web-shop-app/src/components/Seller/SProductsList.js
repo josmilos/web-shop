@@ -5,9 +5,11 @@ import SProductItem from "./SProductItem";
 const SProductsList = () => {
     const products = useLoaderData();
     return (
-    <Fragment>
+
+        <div style={{display: 'flex'}}>
         {products.map((product) => <SProductItem product={product} key ={product.productId}></SProductItem>)}
-    </Fragment>)
+        </div>
+)
 }
 
 export default SProductsList;

@@ -35,52 +35,48 @@ const OrderBuyerItem = ({ order }) => {
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table>
-          {order && order.status === "active" && (
-            <TableBody>
-              <TableRow key={order.orderId}>
-                <TableCell>{order.orderId}</TableCell>
-                <TableCell>
-                  {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
-                </TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>
-                  {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
-                </TableCell>
-                <TableCell>{order.totalAmount}</TableCell>
-                <TableCell>
-                  <Button variant="contained" onClick={onDetailsHandler}>
-                    Details
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={onCancelHandler}
-                    disabled={
-                      order.status === "cancelled" ||
-                      !lessThanOneHourAgo(order.orderDate)
-                    }
-                  >
-                    Cancel
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-    </div>
+    <>
+      {order && order.status === "active" && (
+        <TableRow
+          key={order.orderId}
+          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        >
+          <TableCell >{order.orderId}</TableCell>
+          <TableCell>
+            {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
+          </TableCell>
+          <TableCell >{order.status}</TableCell>
+          <TableCell >
+            {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
+          </TableCell>
+          <TableCell >{order.totalAmount}</TableCell>
+          <TableCell >
+            <Button variant="contained" onClick={onDetailsHandler}>
+              Details
+            </Button>
+          </TableCell>
+          <TableCell >
+            <Button
+              variant="contained"
+              color="error"
+              onClick={onCancelHandler}
+              disabled={
+                order.status === "cancelled" ||
+                !lessThanOneHourAgo(order.orderDate)
+              }
+            >
+              Cancel
+            </Button>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   );
 };
 
 export default OrderBuyerItem;
 
 export async function cancelOrder(props) {
-  console.log("usao");
   const data = {
     orderId: 0,
     status: "cancelled",

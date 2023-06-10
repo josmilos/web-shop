@@ -34,33 +34,32 @@ const OrderSellerItem = ({ order, time }) => {
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table>
-          {order && show() && (
-            <TableBody>
-              <TableRow key={order.orderId}>
-                <TableCell>{order.orderId}</TableCell>
-                <TableCell>
-                  {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
-                </TableCell>
-                <TableCell>{order.userBuyerId}</TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>
-                  {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
-                </TableCell>
-                <TableCell>{order.totalAmount}</TableCell>
-                <TableCell>
-                  <Button variant="contained" onClick={onDetailsHandler}>
-                    Details
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-    </div>
+    <>
+      {order && show() && (
+
+          <TableRow
+            key={order.orderId}
+            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+          >
+            <TableCell>{order.orderId}</TableCell>
+            <TableCell>
+              {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
+            </TableCell>
+            <TableCell>{order.userBuyerId}</TableCell>
+            <TableCell>{order.status}</TableCell>
+            <TableCell>
+              {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
+            </TableCell>
+            <TableCell>{order.totalAmount}</TableCell>
+            <TableCell>
+              <Button variant="contained" onClick={onDetailsHandler}>
+                Details
+              </Button>
+            </TableCell>
+          </TableRow>
+
+      )}
+    </>
   );
 };
 

@@ -26,7 +26,9 @@ const NewProductPage = () => {
           </Button>
         </Stack>
       </div>
+      <div style={{display:'flex', justifyContent:'center'}}>
       <ProductForm />
+      </div>
     </Fragment>
   );
 };

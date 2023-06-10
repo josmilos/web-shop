@@ -18,34 +18,29 @@ const AOrderItem = ({ order }) => {
 
   const onDetailsHandler = () => {
     // prosledi ovde ovaj order
-    
+
     navigate(`/dashboard/order-history/${order.orderId}`, { state: { order } });
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table>
-          
-          {order ? (
-            <TableBody>
-              <TableRow key={order.orderId}>
-                <TableCell>{order.orderId}</TableCell>
-                <TableCell>{moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}</TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{order.userBuyerId}</TableCell>
-                <TableCell>{order.totalAmount}</TableCell>
-                <TableCell><Button variant="contained" onClick={onDetailsHandler}>
-                    Details
-                  </Button></TableCell>
-              </TableRow>
-            </TableBody>
-          ) : (
-            ""
-          )}
-        </Table>
-      </TableContainer>
-    </div>
+    <>
+      {order && (
+        <TableRow key={order.orderId}>
+          <TableCell>{order.orderId}</TableCell>
+          <TableCell>
+            {moment(order.orderDate).format("DD-MM-YYYY HH:mm:ss")}
+          </TableCell>
+          <TableCell>{order.status}</TableCell>
+          <TableCell>{order.userBuyerId}</TableCell>
+          <TableCell>{order.totalAmount}</TableCell>
+          <TableCell>
+            <Button variant="contained" onClick={onDetailsHandler}>
+              Details
+            </Button>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   );
 };
 

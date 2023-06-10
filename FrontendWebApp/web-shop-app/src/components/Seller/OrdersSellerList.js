@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import {
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -15,22 +16,29 @@ const OrdersSellerList = (props) => {
   return (
     <Fragment>
       <TableContainer component={Paper}>
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-            <TableCell>Order ID</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Buyer ID</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Delivery Time</TableCell>
-            <TableCell>Total Amount</TableCell>
+              <TableCell>Order ID</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Buyer ID</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Delivery Time</TableCell>
+              <TableCell>Total Amount</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
+          <TableBody>
+            {orders.map((order) => (
+              <OrderSellerItem
+                order={order}
+                key={order.orderId}
+                time={props.time}
+              ></OrderSellerItem>
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
-      {orders.map((order) => (
-        <OrderSellerItem order={order} key={order.orderId} time = {props.time}></OrderSellerItem>
-      ))}
     </Fragment>
   );
 };

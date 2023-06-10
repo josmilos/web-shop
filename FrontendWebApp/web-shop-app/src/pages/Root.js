@@ -3,6 +3,8 @@ import MainNavigation from "../components/MainNavigation";
 import React, { Fragment, useEffect } from "react";
 import { getTokenDuration } from "../service/UserService/AuthService";
 import CartProvider from "../store/CartProvider";
+import { Typography } from "@mui/material";
+import StickyFooter from "../components/Footer";
 
 const RootLayout = () => {
   const token = useLoaderData();
@@ -29,6 +31,9 @@ const RootLayout = () => {
         <main>
           <Outlet />
         </main>
+        <footer>
+        <StickyFooter/>
+      </footer>
       </Fragment>
   );
 };

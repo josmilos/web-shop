@@ -46,53 +46,46 @@ const SellerItem = ({ seller }) => {
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table>
-          {seller ? (
-            <TableBody>
-              <TableRow key={seller.userId}>
-                <TableCell>{seller.userId}</TableCell>
-                <TableCell>{seller.userName}</TableCell>
-                <TableCell>{seller.email}</TableCell>
-                <TableCell>{seller.firstName}</TableCell>
-                <TableCell>{seller.userType}</TableCell>
-                <TableCell>{seller.verification}</TableCell>
-                <TableCell>
-                  {seller.userType === "seller" && (
-                    <>
-                      <Button
-                        variant="contained"
-                        disabled={
-                          seller.verification === "verified" ||
-                          seller.verification === "denied"
-                        }
-                        onClick={() => handleVerify()}
-                      >
-                        Approve
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        disabled={
-                          seller.verification === "verified" ||
-                          seller.verification === "denied"
-                        }
-                        onClick={() => handleDeny()}
-                      >
-                        Deny
-                      </Button>
-                    </>
-                  )}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          ) : (
-            ""
-          )}
-        </Table>
-      </TableContainer>
-    </div>
+    <>
+      {seller && seller.userType !== 'admin' && (
+        <TableRow key={seller.userId}>
+          <TableCell>{seller.userId}</TableCell>
+          <TableCell>{seller.userName}</TableCell>
+          <TableCell>{seller.email}</TableCell>
+          <TableCell>{seller.firstName}</TableCell>
+          <TableCell>{seller.userType}</TableCell>
+          <TableCell>{seller.verification}</TableCell>
+          <TableCell style={{textAlign:'center'}}>
+            {seller.userType === "seller" && (
+              <>
+                <Button
+                sx={{mr: '1rem'}}
+                  variant="contained"
+                  disabled={
+                    seller.verification === "verified" ||
+                    seller.verification === "denied"
+                  }
+                  onClick={() => handleVerify()}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  disabled={
+                    seller.verification === "verified" ||
+                    seller.verification === "denied"
+                  }
+                  onClick={() => handleDeny()}
+                >
+                  Deny
+                </Button>
+              </>
+            )}
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   );
 };
 
