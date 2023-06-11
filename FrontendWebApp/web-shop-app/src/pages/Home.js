@@ -1,4 +1,10 @@
 import React from "react";
+import PageContent from "../components/PageContent";
+
+const content = {
+  title: "Welcome to Our Website",
+  description: "Thank you for visiting. Please log in or sign up to see content!",
+};
 
 const HomePage = () => {
   const styles = {
@@ -21,14 +27,7 @@ const HomePage = () => {
     },
   };
 
-  return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Welcome to Our Website</h1>
-      <p style={styles.paragraph}>
-        Thank you for visiting. We hope you have a great experience!
-      </p>
-    </div>
-  );
+  return <PageContent content={content} />;
 };
 
 export default HomePage;

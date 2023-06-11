@@ -25,7 +25,8 @@ export default NewOrderPage;
 export async function loader({ request, params }) {
   const response = await fetch("https://localhost:7108/api/products/all", {
     headers: {
-      Authorization: `Bearer ${getAuthToken()}`,
+      "Content-Type": "application/json",
+        "Authorization": `Bearer ${getAuthToken()}`,
     },
   });
 

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebShopAPI.Dto;
 using WebShopAPI.Interfaces;
+using WebShopAPI.Models;
 
 namespace WebShopAPI.Controllers
 {
@@ -19,7 +21,15 @@ namespace WebShopAPI.Controllers
         [HttpPost("login")]
         public IActionResult Post([FromBody] UserCredentialsDto credDto)
         {
-            return Ok(_userService.Login(credDto));
+            Dictionary<string, string> response = _userService.Login(credDto);
+            if (response["statusCode"] != "200")
+            {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = response["statusCode"], token = response["token"] });
+            }
         }
 
         [HttpPost("register")]
@@ -36,6 +46,7 @@ namespace WebShopAPI.Controllers
         }
 
         [HttpGet("unverified-sellers")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetUnverifiedSellers()
         {
 
@@ -64,23 +75,41 @@ namespace WebShopAPI.Controllers
         [HttpPatch("edit/{id}")]
         public IActionResult ChangeUser(int id, [FromBody] UserDto user)
         {
-            return Ok(_userService.UpdateUser(id, user));
+            Dictionary<string, string> response = _userService.UpdateUser(id, user);
+            if (response["statusCode"] != "200")
+            {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = response["statusCode"], message = response["message"] });
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteUser(int id)
         {
             if (_userService.DeleteUser(id))
             {
-                return Ok(_userService.DeleteUser(id));
+                return Ok(new { StatusCode = "200", message = "User with ID " + id + " successfully deleted." });
             }
-            return Ok(_userService.DeleteUser(id)); // TREBA NEKI STATUS CODE
+            return BadRequest(new { statusCode = "400", message = "User with ID " + id + " does not exist" });
         }
 
         [HttpPatch("verify-user/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult VerifyUser(int id, [FromBody] string verification)
         {
-            return Ok(_userService.VerifyUser(id, verification));
+            Dictionary<string, string> response = _userService.VerifyUser(id, verification);
+            if (response["statusCode"] != "200")
+            {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = "200", message = "User with ID " + id + " successfully verified." });
+            }
         }
     }
 }

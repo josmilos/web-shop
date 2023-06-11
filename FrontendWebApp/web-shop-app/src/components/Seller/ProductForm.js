@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import { Form, json, Navigate, useNavigate } from "react-router-dom";
+import { Form, json, Navigate, useActionData, useNavigate } from "react-router-dom";
 import { UploadFileOutlined } from "@mui/icons-material";
 import { StyledAvatar } from "../Buyer/ProductItemStyle";
 import { DecodedImage } from "../DecodedImage";
@@ -15,6 +15,7 @@ import { DecodedImage } from "../DecodedImage";
 const defaultTheme = createTheme();
 
 const ProductForm = () => {
+  const data = useActionData();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -113,9 +114,10 @@ const ProductForm = () => {
               type="number"
               value={price}
               name="price"
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => {if(e.target.value >= 0){setPrice(e.target.value)}} }
               required
               fullWidth
+              InputProps={{inputProps: {min: 0}}}
               margin="normal"
               sx={{ width: "100%" }}
             />
@@ -126,9 +128,10 @@ const ProductForm = () => {
               type="number"
               value={quantity}
               name="quantity"
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={(e) => {if(e.target.value >= 0){setQuantity(e.target.value)}}}
               required
               fullWidth
+              InputProps={{inputProps: {min: 0}}}
               margin="normal"
               sx={{ width: "100%" }}
             />
@@ -139,7 +142,7 @@ const ProductForm = () => {
               variant="outlined"
               fullWidth
               startIcon={<UploadFileOutlined />}
-              sx={{ marginRight: "2rem", marginTop: "1rem", width: "100%" }}
+              sx={{ marginRight: "2rem", marginTop: "1rem", marginBottom:'1rem', width: "100%" }}
             >
               Upload Picture
               <input
@@ -159,6 +162,15 @@ const ProductForm = () => {
               readOnly
               hidden
             />
+            {data && data.message && (
+            <Typography
+              color={"#FF0000"}
+              fontWeight={"bold"}
+              style={{ textAlign: "center" }}
+            >
+              {data.message}
+            </Typography>
+          )}
             <Button
               type="submit"
               variant="contained"

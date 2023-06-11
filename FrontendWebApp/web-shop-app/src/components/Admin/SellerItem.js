@@ -21,13 +21,21 @@ const SellerItem = ({ seller }) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
+          'Authorization': `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify(status),
       }
     );
 
-    if (!response.ok) {
+    if (
+      response.status === 422 ||
+      response.status === 401 ||
+      response.status === 400 ||
+      response.status === 403
+    ) {
+      return response;
+    }
+  else if(!response.ok) {
       throw json(
         { message: response["message"] },
         { status: response["statusCode"] }

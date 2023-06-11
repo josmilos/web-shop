@@ -26,7 +26,6 @@ const SProductItem = ({ product }) => {
                   </StyledAvatar>
                   <div style={{ textAlign: "center" }}>
                     <Typography
-                      ggutterBottom
                       variant="h5"
                       style={{ fontWeight: "bold", marginBottom: "0.5rem" }}
                     >

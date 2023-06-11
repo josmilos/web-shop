@@ -37,16 +37,17 @@ namespace WebShopAPI.Services
             Dictionary<string, string> response = new Dictionary<string, string>();
             response["statusCode"] = "200";
             response["message"] = "";
-            UserCredentialsDto user = _mapper.Map<List<UserCredentialsDto>>(_dbContext.Users.ToList()).First(x => x.Email == credentialsDto.Email);
-            UserDto userDto = GetById(user.UserId);
+
+                UserCredentialsDto user = _mapper.Map<List<UserCredentialsDto>>(_dbContext.Users.ToList()).FirstOrDefault(x => x.Email == credentialsDto.Email);
 
             if(user == null)
             {
-                response["statusCode"] = "500";
-                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                response["statusCode"] = "401";
+                response["message"] = "User with this email address does not exist";
                 return response;
             }
-            
+            UserDto userDto = GetById(user.UserId);
+
             if (BCrypt.Net.BCrypt.Verify(credentialsDto.Password, user.Password))
             {
 
@@ -102,7 +103,8 @@ namespace WebShopAPI.Services
                 response["message"] = "The server has encountered a situation it does not know how to handle.";
                 return response;
             }
-            Console.WriteLine(user.UserName);
+
+
             #region UsernameValidation
             if (user.UserName == string.Empty || user.UserName == null)
             {
@@ -369,38 +371,124 @@ namespace WebShopAPI.Services
             return _mapper.Map<List<UserDto>>(_dbContext.Users.ToList());
         }
 
-        public UserDto UpdateUser(int id, UserDto newUserData)
+        public Dictionary<string, string> UpdateUser(int id, UserDto newUserData)
         {
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
+
             User user = _dbContext.Users.Find(id);
             if(user == null)
             {
-                Console.WriteLine("NEMA TOG KORISNIKA");
-                // napravi poruku o gresci na serveru
-                throw new NotImplementedException();
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
+
             }
-            if(newUserData.UserName != null && newUserData.UserName != string.Empty)
+            if (newUserData.UserName != null && newUserData.UserName != string.Empty)
             {
-                user.UserName = newUserData.UserName;
+                if (!Regex.IsMatch(newUserData.FirstName, @"^[a-zA-Z]+$"))
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nFirstname can not contain numbers.";
+                }
+                else if (newUserData.FirstName.Length < 2 || newUserData.FirstName.Length > 30)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nFirstname length has to be between 2 and 30 characters";
+                }
+                else
+                {
+                    user.UserName = newUserData.UserName;
+                }
+                
             }
-            if (newUserData.Email != null && newUserData.Email != string.Empty)
+            if (newUserData.Address != null && newUserData.Address != string.Empty)
             {
-                user.Email = newUserData.Email;
+                if (Regex.IsMatch(newUserData.Address, @"^[0-9]+$"))
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nAddress can not contain only numbers.";
+                }
+                else if (newUserData.Address.Length < 5 || newUserData.Address.Length > 50)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nAddress length has to be between 5 and 50 characters";
+                }
+                else
+                {
+                    user.Address = newUserData.Address;
+                }
+                
             }
             if (newUserData.Password != null && newUserData.Password != string.Empty)
             {
-                user.Password = BCrypt.Net.BCrypt.HashPassword(newUserData.Password);
+                if (newUserData.Password.Length < 6 || newUserData.Password.Length > 30)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nPassword length has to be between 6 and 30 characters";
+                }
+                else
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(newUserData.Password);
+                }
+                
             }
             if (newUserData.FirstName != null && newUserData.FirstName != string.Empty)
             {
-                user.FirstName = newUserData.FirstName;
+                if (!Regex.IsMatch(newUserData.FirstName, @"^[a-zA-Z]+$"))
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nFirstname can not contain numbers.";
+                }
+                else if (user.FirstName.Length < 2 || user.FirstName.Length > 30)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nFirstname length has to be between 2 and 30 characters";
+                }
+                else
+                {
+                    user.FirstName = newUserData.FirstName;
+                }
+                
             }
             if (newUserData.LastName != null && newUserData.LastName != string.Empty)
             {
-                user.LastName = newUserData.LastName;
+                if (!Regex.IsMatch(newUserData.LastName, @"^[a-zA-Z]+$"))
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nLastname can not contain numbers.";
+                }
+                else if (newUserData.LastName.Length < 2 || newUserData.LastName.Length > 30)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] += "\nLastname length has to be between 2 and 30 characters";
+                }
+                else
+                {
+                    user.LastName = newUserData.LastName;
+                }
+                
             }
             if (newUserData.DateOfBirth != null && newUserData.DateOfBirth != DateTime.Today)
             {
-                user.DateOfBirth = newUserData.DateOfBirth;
+                if (DateTime.Compare(newUserData.DateOfBirth, new DateTime(1910, 1, 1)) < 0)
+                {
+                    Console.WriteLine("-----------DATUM STARIJI----------------");
+                    response["statusCode"] = "400";
+                    response["message"] += "\nDate of birth can not be before year 1910.";
+                }
+                else if (DateTime.Compare(newUserData.DateOfBirth, DateTime.Now) > 0)
+                {
+                    Console.WriteLine("-----------DATUM MLADJI----------------");
+                    response["statusCode"] = "400";
+                    response["message"] += "\nDate of birth can not be after today.";
+                }
+                else
+                {
+                    user.DateOfBirth = newUserData.DateOfBirth;
+                }
+                
             }
             if (newUserData.Image != null && newUserData.Image != string.Empty)
             {
@@ -410,8 +498,7 @@ namespace WebShopAPI.Services
             
             _dbContext.SaveChanges();
 
-            Console.WriteLine("ZAVRSENE IZMENE");
-            return _mapper.Map<UserDto>(user);
+            return response;
         }
 
         public List<UserDto> GetUnverifiedSellers()
@@ -429,29 +516,49 @@ namespace WebShopAPI.Services
 
         }
 
-        public UserDto VerifyUser(int id, string option)
+        public Dictionary<string, string> VerifyUser(int id, string option)
         {
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
+
             User user = _dbContext.Users.Find(id);
-            if(option == "approve")
+
+            if (user == null)
             {
-                var mailMessage = new MailMessage
-                {
-                    Subject = "Account Verification",
-                    Body = "<h1>Your account has been verified.</h1>",
-                    IsBodyHtml = true,
-                };
-                mailMessage.From = new MailAddress(_senderEmail.Value);
-                mailMessage.To.Add(user.Email);
-                _smtpClient.Send(mailMessage);
-                user.Verification = "verified";
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
+
             }
-            else if(option == "deny")
+            try
             {
-                user.Verification = "denied";
+                if (option == "approve")
+                {
+                    var mailMessage = new MailMessage
+                    {
+                        Subject = "Account Verification",
+                        Body = "<h1>Your account has been verified.</h1>",
+                        IsBodyHtml = true,
+                    };
+                    mailMessage.From = new MailAddress(_senderEmail.Value);
+                    mailMessage.To.Add(user.Email);
+                    _smtpClient.Send(mailMessage);
+                    user.Verification = "verified";
+                }
+                else if (option == "deny")
+                {
+                    user.Verification = "denied";
+                }
+                _dbContext.SaveChanges();
+            }catch (Exception ex)
+            {
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
             }
 
-            _dbContext.SaveChanges();
-            return _mapper.Map<UserDto>(user);
+            return response;
         }
     }
 }

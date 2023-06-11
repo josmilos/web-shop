@@ -21,10 +21,12 @@ export default VerificationPage;
 export async function loader({request, params}) {
     const response = await fetch('https://localhost:7108/api/users/all', {
         headers: {
+            'Content-Type': 'application/json',
             "Authorization" : `Bearer ${getAuthToken()}`
         }
     });
   
+    
     if(!response.ok){
         throw json({message: 'Could not fetch list of unverified sellers.'}, {
             status: 500

@@ -41,7 +41,7 @@ export async function action({ request }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
+        "Authorization": `Bearer ${getAuthToken()}`,
       },
       body: JSON.stringify(productData),
     }

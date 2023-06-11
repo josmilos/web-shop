@@ -57,8 +57,6 @@ const SignUpForm = () => {
     setPasswordMatch(value === password);
   };
 
-
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -77,7 +75,16 @@ const SignUpForm = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {data && data.message && <Typography>{data.message}</Typography>}
+          {data && data.message && (
+            <Typography
+              color={"#FF0000"}
+              fontWeight={"bold"}
+              style={{ textAlign: "center" }}
+            >
+              {data.message}
+            </Typography>
+          )}
+
           <Box noValidate sx={{ mt: 3 }}>
             <Form method="post">
               <Grid container spacing={2}>
@@ -121,10 +128,9 @@ const SignUpForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <input
-                    required
+                      required
                       type="date"
                       name="date"
                       value={date}
@@ -136,6 +142,7 @@ const SignUpForm = () => {
                         border: "1px solid #ccc", // Add a border if desired
                         borderRadius: "4px", // Add border radius if desired
                       }}
+                      min={"1910-01-01"}
                     ></input>
                   </LocalizationProvider>
                 </Grid>
@@ -231,16 +238,17 @@ const SignUpForm = () => {
                 Sign Up
               </Button>
             </Form>
-            <Typography align="center">Or</Typography>
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-            />
-
+            <Typography
+              align="center"
+              sx={{ mb: "0.5rem" }}
+              fontWeight={"bold"}
+              color={"#3D70B2"}
+            >
+              Or
+            </Typography>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: '0.5rem' }}>
+              <GoogleButton />
+            </div>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="log-in" variant="body2">

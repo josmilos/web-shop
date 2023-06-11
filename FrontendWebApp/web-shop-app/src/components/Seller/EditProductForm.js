@@ -1,14 +1,15 @@
 import { ThemeProvider } from "@emotion/react";
 import { UploadFileOutlined } from "@mui/icons-material";
-import { Box, Button, TextField, createTheme } from "@mui/material";
+import { Box, Button, TextField, Typography, createTheme } from "@mui/material";
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useActionData } from "react-router-dom";
 import { DecodedImage } from "../DecodedImage";
 import { StyledAvatar } from "../Buyer/ProductItemStyle";
 
 const defaultTheme = createTheme();
 
 const EditProductForm = ({ product }) => {
+  const data = useActionData();
   const [productId, setproductId] = useState(product.productId);
   const [name, setName] = useState(product.name);
   const [description, setDescription] = useState(product.description);
@@ -91,9 +92,10 @@ const EditProductForm = ({ product }) => {
               type="number"
               value={price}
               name="price"
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => {if(e.target.value >= 0){setPrice(e.target.value)}}}
               required
               fullWidth
+              InputProps={{inputProps: {min: 0}}}
               margin="normal"
               sx={{ width: "100%" }}
             />
@@ -104,9 +106,10 @@ const EditProductForm = ({ product }) => {
               type="number"
               value={quantity}
               name="quantity"
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={(e) => {if(e.target.value >= 0){setQuantity(e.target.value)}}}
               required
               fullWidth
+              InputProps={{inputProps: {min: 0}}}
               margin="normal"
               sx={{ width: "100%" }}
             />
@@ -128,6 +131,15 @@ const EditProductForm = ({ product }) => {
               />
             </Button>
             <input type="text" value={image} name="img" id="img" readOnly hidden/>
+            {data && data.message && (
+            <Typography
+              color={"#FF0000"}
+              fontWeight={"bold"}
+              style={{ textAlign: "center", width: '100%' }}
+            >
+              {data.message}
+            </Typography>
+          )}
             <div>
             <Button
               type="submit"

@@ -48,6 +48,10 @@ export async function loader({ request, params }) {
     console.log(productId)
     const response = await fetch('https://localhost:7108/api/products/' + productId, {
       method: request.method,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
     });
   
     if (!response.ok) {

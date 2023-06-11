@@ -20,31 +20,61 @@ namespace WebShopAPI.Services
             _dbContext = dbContext;
         }
 
-        public OrderDto AddOrder(OrderDto newOrder)
+        public Dictionary<string, string> AddOrder(OrderDto newOrder)
         {
-            Console.WriteLine(newOrder);
+
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
+
             Order order = _mapper.Map<Order>(newOrder);
             List<ProductDto> products = newOrder.Products;
             List<Product> dbProducts = _dbContext.Products.ToList();
+
+            foreach(ProductDto product in products)
+            {
+                Product prod = _dbContext.Products.Find(product.ProductId);
+                if(prod == null)
+                {
+                    response["statusCode"] = "400";
+                    response["message"] = "Product " + product.Name + " does not exist in our database.";
+                    return response;
+                }
+                else if(prod.Quantity < product.Quantity) 
+                {
+                    response["statusCode"] = "400";
+                    response["message"] = "Product " + product.Name + " has only " + prod.Quantity + " available units.";
+                    return response;
+                }
+            }
 
             foreach (ProductDto product in products)
             {
                 ProductOrder productOrder = new ProductOrder() { OrderId = order.OrderId, ProductId = product.ProductId, ProductQuantity = product.Quantity, Order = order };
                 _dbContext.ProductOrders.Add(productOrder);
                 order.OrderProducts.Add(productOrder);
-                Console.Write(product.ProductId);
                 Product dbProduct = _dbContext.Products.Find(product.ProductId);
                 dbProduct.Quantity = dbProduct.Quantity - product.Quantity;
             }
 
-            User buyer = _dbContext.Users.Find(order.UserBuyerId);
-            order.UserBuyer = buyer;
+            try
+            {
+                User buyer = _dbContext.Users.Find(order.UserBuyerId);
+                order.UserBuyer = buyer;
+            }
+            catch(Exception ex)
+            {
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
+            }
+            
             
 
             _dbContext.Orders.Add(order);
             _dbContext.SaveChanges();
 
-            return _mapper.Map<OrderDto>(order);
+            return response;
         }
 
         public bool DeleteOrder(int id)
@@ -155,27 +185,40 @@ namespace WebShopAPI.Services
 
             return returnOrders;
         }
-        public OrderDto EditStatusOrder(int id, OrderEditDto newOrderData)
+        public Dictionary<string, string> EditStatusOrder(int id, OrderEditDto newOrderData)
         {
-            
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
+
             Order order = _dbContext.Orders.Where(o => o.OrderId == id).Include(o => o.OrderProducts).FirstOrDefault();
             
             if(order == null)
             {
-                Console.WriteLine("NE POSTOJI OVAJ ORDER");
-                throw new NotImplementedException();
+                response["statusCode"] = "400";
+                response["message"] = "This order does not exist";
+                return response;
             }
 
 
             if (newOrderData == null)
             {
-                Console.WriteLine("NEMA PODATAKA ZA EDITORDER");
-                throw new NotImplementedException();
+                response["statusCode"] = "500";
+                response["message"] = "The server has encountered a situation it does not know how to handle.";
+                return response;
             }
             if (newOrderData.Status != string.Empty && newOrderData.Status != null)
             {
-                // DODATI VALIDACIJE
-                order.Status = newOrderData.Status;
+                if(newOrderData.Status != "cancelled")
+                {
+                    response["statusCode"] = "400";
+                    response["message"] = "There was an error with your request. Try again";
+                }
+                else
+                {
+                    order.Status = newOrderData.Status;
+                }
+                
             }
 
             if(order.Status == "cancelled")
@@ -193,17 +236,27 @@ namespace WebShopAPI.Services
             }
 
             _dbContext.SaveChanges();
-            return _mapper.Map<OrderDto>(order);
+            return response;
         }
 
-        public OrderDto UpdateOrder(int id, OrderDto newOrderData)
+        public Dictionary<string, string> UpdateOrder(int id, OrderDto newOrderData)
         {
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response["statusCode"] = "200";
+            response["message"] = "";
+
             Order order = _dbContext.Orders.Find(id);
+            if(order == null) 
+            {
+                response["statusCode"] = "400";
+                response["message"] = "Order with ID " + id + " does not exist!";
+                return response;
+            }
+
             order.Comment = newOrderData.Comment;
             order.Address = newOrderData.Address;
 
-            _dbContext.SaveChanges();
-            return _mapper.Map<OrderDto>(order);
+            return response;
         }
     }
 }

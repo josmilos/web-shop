@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using WebShopAPI.Dto;
 using WebShopAPI.Interfaces;
+using WebShopAPI.Models;
 using WebShopAPI.Services;
 
 namespace WebShopAPI.Controllers
@@ -35,21 +38,46 @@ namespace WebShopAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "seller")]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
-            return Ok(_productService.AddProduct(product));
+            Dictionary<string, string> response = _productService.AddProduct(product);
+            if (response["statusCode"] != "200") 
+            {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = response["statusCode"], message = response["message"] });
+            }
+                
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = "seller")]
         public IActionResult ChangeProduct(int id, [FromBody] ProductDto product)
         {
-            return Ok(_productService.UpdateProduct(id, product));
+            Dictionary<string, string> response = _productService.UpdateProduct(id, product);
+            if (response["statusCode"] != "200")
+            {
+                return BadRequest(new { statusCode = response["statusCode"], message = response["message"] });
+            }
+            else
+            {
+                return Ok(new { StatusCode = response["statusCode"], message = response["message"] });
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "seller")]
         public IActionResult DeleteProduct(int id)
         {
-            return Ok(_productService.DeleteProduct(id));
+            if (_productService.DeleteProduct(id))
+            {
+                return Ok(new { StatusCode = "200", message = "Product with ID " + id + " successfully deleted." });
+            }
+            return BadRequest(new { statusCode = "400", message = "Product with ID " + id + " does not exist" });
+
         }
     }
 }

@@ -47,6 +47,7 @@ export async function loader({ request, params }) {
     "https://localhost:7108/api/orders/history-" + `${query}/${userId}`,
     {
       headers: {
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${getAuthToken()}`,
       },
     }

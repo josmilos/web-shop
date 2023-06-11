@@ -41,6 +41,7 @@ import SellerProductDetailPage, {
 import CartProvider from "./store/CartProvider";
 import NewOrdersPage, {loader as newOrdersLoader} from "./pages/NewOrdersPage";
 import OrderBuyerDetail from "./components/Buyer/OrderBuyerDetail";
+import ErrorPage from "./pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     id: "root",
     loader: tokenLoader,
+    errorElement: <ErrorPage/>,
     children: [
       {
         index: true,

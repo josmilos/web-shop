@@ -11,16 +11,17 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import GoogleButton from "../components/GoogleButton";
-import { Form, json, redirect } from "react-router-dom";
+import { Form, json, redirect, useActionData } from "react-router-dom";
 import {
   extractTokenData,
   storeAuthToken,
 } from "../service/UserService/AuthService";
+import { GoogleLogin } from "@react-oauth/google";
 
 const defaultTheme = createTheme();
 
 const LogInPage = () => {
-
+  const data = useActionData();
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -37,12 +38,13 @@ const LogInPage = () => {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{mb: '0.5rem'}}>
             Sign in
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <Form method="post">
               <TextField
+              type="email"
                 margin="normal"
                 required
                 fullWidth
@@ -62,17 +64,19 @@ const LogInPage = () => {
                 id="password"
                 autoComplete="current-password"
               />
-
+              {data && data.message && <Typography color={'#FF0000'} fontWeight={'bold'} style={{textAlign:'center', marginTop: '1rem'}}>{data.message}</Typography>}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, }}
               >
                 Sign In
               </Button>
-              <Typography align="center">Or</Typography>
+              <Typography align="center" sx={{mb: '0.5rem'}} fontWeight={'bold'} color={'#3D70B2'}>Or</Typography>
+              <div style={{display:'flex', justifyContent:'center', marginBottom: '0.5rem'}}>
               <GoogleButton />
+              </div>
               <Grid container justifyContent={"flex-end"}>
                 <Grid item>
                   <Link href="sign-up" variant="body2">
@@ -106,12 +110,17 @@ export async function action({ request, params }) {
     body: JSON.stringify(userData),
   });
 
-
+  console.log(response.status)
+  if (
+    response.status === 422 ||
+    response.status === 401 ||
+    response.status === 400 ||
+    response.status === 403
+  ) {
+    return response;
+  }
   if (!response.ok) {
-    throw json(
-      { message: response["message"] },
-      { status: response["statusCode"] }
-    );
+    throw json({ message: "Could not authenticate user." }, { status: 500 });
   }
 
   const resData = await response.json();

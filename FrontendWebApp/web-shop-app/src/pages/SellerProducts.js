@@ -42,7 +42,8 @@ export async function loader({ request, params }) {
     "https://localhost:7108/api/products/seller-products/" + id,
     {
       headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`,
       },
     }
   );

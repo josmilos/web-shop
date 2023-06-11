@@ -8,13 +8,13 @@ namespace WebShopAPI.Interfaces
         List<UserDto> GetUsers();
         UserDto GetById(int id);
         UserDto AddUser(UserDto newUser);
-        UserDto UpdateUser(int id, UserDto newUserData);
+        Dictionary<string, string> UpdateUser(int id, UserDto newUserData);
         bool DeleteUser(int id);
 
         Dictionary<string, string> Login(UserCredentialsDto credentialsDto);
         Task<Dictionary<string, string>> Register(UserDto userDto);
         List<UserDto> GetUnverifiedSellers();
 
-        UserDto VerifyUser(int Id, string option);
+        Dictionary<string, string> VerifyUser(int Id, string option);
     }
 }

@@ -6,8 +6,8 @@ namespace WebShopAPI.Interfaces
     {
         List<ProductDto> GetProducts();
         ProductDto GetById(int id);
-        ProductDto AddProduct(ProductDto newProduct);
-        ProductDto UpdateProduct(int id, ProductDto newProductData);
+        Dictionary<string, string> AddProduct(ProductDto newProduct);
+        Dictionary<string, string> UpdateProduct(int id, ProductDto newProductData);
         bool DeleteProduct(int id);
 
         List<ProductDto> GetSellerProducts(int id);

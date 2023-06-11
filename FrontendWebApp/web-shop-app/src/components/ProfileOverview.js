@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, useActionData } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -26,8 +26,10 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 
 const ProfileOverview = () => {
   const user = useLoaderData();
+  const data = useActionData();
   const [image, setImage] = useState(user.image);
   const [date, setDate] = useState(user.dateOfBirth);
+
 
   const ImageEncode = (e) => {
     const files = e.target.files;
@@ -220,6 +222,17 @@ const ProfileOverview = () => {
                       </Button>
                     </label>
                   </Grid>
+                  <div style={{ display:'inline-block'}}>
+                  {data && data.message && (
+            <Typography
+              color={"#FF0000"}
+              fontWeight={"bold"}
+              style={{ textAlign: "center"}}
+            >
+              {data.message}
+            </Typography>
+          )}
+          </div>
                   <Button variant="contained" type="submit" fullWidth>
                     Save
                   </Button>

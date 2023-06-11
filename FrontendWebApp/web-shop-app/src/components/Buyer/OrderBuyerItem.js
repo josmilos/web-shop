@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Table,
@@ -20,9 +20,14 @@ const lessThanOneHourAgo = (date) => {
 
 const OrderBuyerItem = ({ order }) => {
   const navigate = useNavigate();
-  const onCancelHandler = () => {
+  const [responseMessage, setResponseMessage] = useState("");
+  const onCancelHandler = async () => {
     if (lessThanOneHourAgo(order.orderDate) && order.status === "active") {
-      cancelOrder(order);
+      const res = await cancelOrder(order);
+      if(res && res.message){
+        setResponseMessage(res.message);
+      }
+      
     } else {
       console.log("PROSLO 1 SAT");
     }
@@ -36,7 +41,7 @@ const OrderBuyerItem = ({ order }) => {
 
   return (
     <>
-      {order && order.status === "active" && (
+      {order && (
         <TableRow
           key={order.orderId}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -49,7 +54,7 @@ const OrderBuyerItem = ({ order }) => {
           <TableCell >
             {moment(order.deliveryTime).format("DD-MM-YYYY HH:mm:ss")}
           </TableCell>
-          <TableCell >{order.totalAmount}</TableCell>
+          <TableCell >${order.totalAmount}</TableCell>
           <TableCell >
             <Button variant="contained" onClick={onDetailsHandler}>
               Details
@@ -67,6 +72,11 @@ const OrderBuyerItem = ({ order }) => {
             >
               Cancel
             </Button>
+            {responseMessage && (
+              <Typography variant="body2" color="error">
+                {responseMessage}
+              </Typography>
+            )}
           </TableCell>
         </TableRow>
       )}
@@ -88,19 +98,22 @@ export async function cancelOrder(props) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
+        'Authorization': `Bearer ${getAuthToken()}`,
       },
       body: JSON.stringify(data),
     }
   );
 
+  
   if (
     response.status === 422 ||
     response.status === 401 ||
     response.status === 400 ||
-    response.status === 403
+    response.status === 403 ||
+    response.status === 500
   ) {
-    return response;
+    const resData = await response.json();
+    return resData;
   }
   if (!response.ok) {
     throw json({ message: "Could not patch order." }, { status: 500 });

@@ -15,7 +15,7 @@ export default function StickyFooter() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '50vh',
+            minHeight: '100vh',
           }}
         >
           <CssBaseline />
@@ -23,7 +23,7 @@ export default function StickyFooter() {
           <Box
             component="footer"
             sx={{
-              py: 3,
+              py: 6,
               px: 2,
               mt: 'auto',
               backgroundColor: (theme) =>

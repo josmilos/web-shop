@@ -3,9 +3,11 @@ import PageContent from "../components/PageContent";
 import ProductForm from "../components/Seller/ProductForm";
 import { Form, Link, json, redirect, useNavigate } from "react-router-dom";
 import { Button, Stack } from "@mui/material";
-import { extractTokenData, getAuthToken } from "../service/UserService/AuthService";
+import {
+  extractTokenData,
+  getAuthToken,
+} from "../service/UserService/AuthService";
 import { ImageEncode } from "../service/ImageConverter";
-
 
 const content = {
   title: "Add New Product",
@@ -21,13 +23,17 @@ const NewProductPage = () => {
       <PageContent content={content} />
       <div className="flexGrow">
         <Stack direction="row" spacing={1} justifyContent="center">
-          <Button type="submit" variant="contained" onClick={() => navigate(-1)}>
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={() => navigate(-1)}
+          >
             My Products
           </Button>
         </Stack>
       </div>
-      <div style={{display:'flex', justifyContent:'center'}}>
-      <ProductForm />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <ProductForm />
       </div>
     </Fragment>
   );
@@ -35,7 +41,7 @@ const NewProductPage = () => {
 
 export default NewProductPage;
 
-export async function action({ request}) {
+export async function action({ request }) {
   const data = await request.formData();
   const user = extractTokenData();
   const sellerId = user["userId"];
@@ -59,12 +65,21 @@ export async function action({ request}) {
     body: JSON.stringify(productData),
   });
 
+  if (
+    response.status === 422 ||
+    response.status === 401 ||
+    response.status === 400 ||
+    response.status === 403
+  ) {
+    return response;
+  }
+
   if (!response.ok) {
     throw json(
       { message: response["message"] },
       { status: response["statusCode"] }
     );
   }
-  
-  return redirect('/dashboard/my-products')
+
+  return redirect("/dashboard/my-products");
 }
