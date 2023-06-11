@@ -56,7 +56,7 @@ export async function action({ request }) {
     sellerId: sellerId,
   };
 
-  const response = await fetch("https://localhost:7108/api/products", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

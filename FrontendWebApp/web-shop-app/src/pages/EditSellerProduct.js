@@ -36,7 +36,7 @@ export async function action({ request }) {
     sellerId: 0,
   };
   const response = await fetch(
-    "https://localhost:7108/api/products/" + productData.productId,
+    `${process.env.REACT_APP_API_URL}/products/` + productData.productId,
     {
       method: "PATCH",
       headers: {

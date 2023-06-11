@@ -26,7 +26,7 @@ export default ProfilePage;
 export async function loader({ request, params }) {
   const user = extractTokenData();
   const id = user["userId"];
-  const response = await fetch("https://localhost:7108/api/users/" + id, {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/` + id, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${getAuthToken()}`,
@@ -68,7 +68,7 @@ export async function action({ request }) {
 
   console.log(userData)
   const response = await fetch(
-    "https://localhost:7108/api/users/edit/" + id,
+    `${process.env.REACT_APP_API_URL}/api/users/edit/` + id,
     {
       method: "PATCH",
       headers: {

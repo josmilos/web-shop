@@ -16,7 +16,7 @@ import { getAuthToken } from "../../service/UserService/AuthService";
 const SellerItem = ({ seller }) => {
   async function updateVerificationStatus(status) {
     const response = await fetch(
-      "https://localhost:7108/api/users/verify-user/" + seller.userId,
+      `${process.env.REACT_APP_API_URL}/verify-user/` + seller.userId,
       {
         method: "PATCH",
         headers: {

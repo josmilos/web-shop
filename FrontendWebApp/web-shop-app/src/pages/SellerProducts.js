@@ -39,7 +39,7 @@ export async function loader({ request, params }) {
   const id = user["userId"];
 
   const response = await fetch(
-    "https://localhost:7108/api/products/seller-products/" + id,
+    `${process.env.REACT_APP_API_URL}/products/seller-products/` + id,
     {
       headers: {
         'Content-Type': 'application/json',

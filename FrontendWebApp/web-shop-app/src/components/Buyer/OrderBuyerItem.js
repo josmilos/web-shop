@@ -93,7 +93,7 @@ export async function cancelOrder(props) {
   };
 
   const response = await fetch(
-    "https://localhost:7108/api/orders/" + props.orderId,
+    `${process.env.REACT_APP_API_URL}/orders/` + props.orderId,
     {
       method: "PATCH",
       headers: {

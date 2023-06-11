@@ -33,7 +33,7 @@ export default NewOrdersPage;
 
 export async function loader({ request, params }) {
   const response = await fetch(
-    "https://localhost:7108/api/orders/history-seller" + `/${userId}`,
+    `${process.env.REACT_APP_API_URL}/orders/history-seller` + `/${userId}`,
     {
       headers: {
         "Content-Type": "application/json",

@@ -20,7 +20,7 @@ export default AllOrdersPage;
 
 export async function loader({ request, params }) {
     const response = await fetch(
-      "https://localhost:7108/api/orders/all",
+      `${process.env.REACT_APP_API_URL}/orders/all`,
       {
         headers: {
           "Content-Type": "application/json",

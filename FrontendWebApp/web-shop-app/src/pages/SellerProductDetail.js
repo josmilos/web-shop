@@ -23,7 +23,7 @@ export default SellerProductDetailPage;
 
 export async function loader({ request, params }) {
     const id = params.productId
-    const response = await fetch("https://localhost:7108/api/products/" + id, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/products/` + id, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${getAuthToken()}`,
@@ -46,7 +46,7 @@ export async function loader({ request, params }) {
   export async function action({ request, params }) {
     const productId = params.productId;
     console.log(productId)
-    const response = await fetch('https://localhost:7108/api/products/' + productId, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/products/` + productId, {
       method: request.method,
       headers: {
         "Content-Type": "application/json",

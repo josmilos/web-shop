@@ -23,7 +23,7 @@ const NewOrderPage = () => {
 export default NewOrderPage;
 
 export async function loader({ request, params }) {
-  const response = await fetch("https://localhost:7108/api/products/all", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/products/all`, {
     headers: {
       "Content-Type": "application/json",
         "Authorization": `Bearer ${getAuthToken()}`,

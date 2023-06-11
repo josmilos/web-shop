@@ -56,7 +56,7 @@ const Cart = (props) => {
       deliveryTime: deliveryTime.toISOString(),
       products: cartCtx.products,
     };
-    const response = await fetch("https://localhost:7108/api/orders", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

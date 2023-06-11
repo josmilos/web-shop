@@ -44,7 +44,7 @@ export default OrderHistoryPage;
 
 export async function loader({ request, params }) {
   const response = await fetch(
-    "https://localhost:7108/api/orders/history-" + `${query}/${userId}`,
+    `${process.env.REACT_APP_API_URL}/orders/history-` + `${query}/${userId}`,
     {
       headers: {
         "Content-Type": "application/json",

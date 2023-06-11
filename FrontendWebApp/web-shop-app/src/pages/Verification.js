@@ -19,7 +19,7 @@ const VerificationPage = () => {
 export default VerificationPage;
 
 export async function loader({request, params}) {
-    const response = await fetch('https://localhost:7108/api/users/all', {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/all`, {
         headers: {
             'Content-Type': 'application/json',
             "Authorization" : `Bearer ${getAuthToken()}`
